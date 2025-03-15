@@ -20,7 +20,7 @@ const HeroSection = () => {
           </div>
           
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 animate-fade-in" style={{ animationDelay: '100ms' }}>
-            Create Engaging LinkedIn Posts in <span className="text-gradient">Seconds</span>
+            Create <span className="bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 bg-clip-text text-transparent animate-pulse-subtle">Engaging</span> LinkedIn Posts in <span className="text-gradient">Seconds</span>
           </h1>
           
           <p className="text-lg md:text-xl text-muted-foreground mb-12 max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: '200ms' }}>
