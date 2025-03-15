@@ -20,7 +20,11 @@ const HeroSection = () => {
           </div>
           
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 animate-fade-in" style={{ animationDelay: '100ms' }}>
-            Create <span className="bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 bg-clip-text text-transparent animate-pulse-subtle">Engaging</span> LinkedIn Posts in <span className="text-gradient">Seconds</span>
+            Create <span className="relative bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 bg-clip-text text-transparent animate-pulse-subtle px-1" style={{ 
+              textShadow: '0 0 10px rgba(217, 70, 239, 0.5)',
+              boxShadow: '0 0 15px rgba(217, 70, 239, 0.3)',
+              borderRadius: '4px' 
+            }}>Engaging</span> LinkedIn Posts in <span className="text-gradient">Seconds</span>
           </h1>
           
           <p className="text-lg md:text-xl text-muted-foreground mb-12 max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: '200ms' }}>
