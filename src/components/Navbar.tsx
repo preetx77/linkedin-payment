@@ -37,14 +37,15 @@ const Navbar = () => {
           <span className="font-bold text-xl text-gradient">Linkgen3</span>
         </Link>
 
-        <div className="hidden md:flex items-center space-x-8">
-          <Link to="/" className="text-foreground hover:text-linkedin link-underline transition-colors">
+        {/* Centered navigation links with improved font */}
+        <div className="hidden md:flex items-center justify-center flex-1 space-x-10">
+          <Link to="/" className="text-foreground hover:text-linkedin link-underline transition-colors font-medium tracking-wide text-base">
             Home
           </Link>
-          <Link to="/pricing" className="text-foreground hover:text-linkedin link-underline transition-colors">
+          <Link to="/pricing" className="text-foreground hover:text-linkedin link-underline transition-colors font-medium tracking-wide text-base">
             Pricing
           </Link>
-          <Link to="/dashboard" className="text-foreground hover:text-linkedin link-underline transition-colors">
+          <Link to="/dashboard" className="text-foreground hover:text-linkedin link-underline transition-colors font-medium tracking-wide text-base">
             Dashboard
           </Link>
         </div>
@@ -84,21 +85,21 @@ const Navbar = () => {
           <div className="flex flex-col space-y-4">
             <Link 
               to="/" 
-              className="text-foreground hover:text-linkedin py-2 px-4 rounded-md transition-colors"
+              className="text-foreground hover:text-linkedin py-2 px-4 rounded-md transition-colors font-medium tracking-wide text-center"
               onClick={() => setIsMenuOpen(false)}
             >
               Home
             </Link>
             <Link 
               to="/pricing" 
-              className="text-foreground hover:text-linkedin py-2 px-4 rounded-md transition-colors"
+              className="text-foreground hover:text-linkedin py-2 px-4 rounded-md transition-colors font-medium tracking-wide text-center"
               onClick={() => setIsMenuOpen(false)}
             >
               Pricing
             </Link>
             <Link 
               to="/dashboard" 
-              className="text-foreground hover:text-linkedin py-2 px-4 rounded-md transition-colors"
+              className="text-foreground hover:text-linkedin py-2 px-4 rounded-md transition-colors font-medium tracking-wide text-center"
               onClick={() => setIsMenuOpen(false)}
             >
               Dashboard
@@ -106,7 +107,7 @@ const Navbar = () => {
             <hr className="border-border" />
             <Link 
               to="/login" 
-              className="text-foreground hover:text-linkedin py-2 px-4 rounded-md transition-colors"
+              className="text-foreground hover:text-linkedin py-2 px-4 rounded-md transition-colors font-medium tracking-wide text-center"
               onClick={() => setIsMenuOpen(false)}
             >
               Login
