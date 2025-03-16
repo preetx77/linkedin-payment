@@ -37,8 +37,8 @@ const Navbar = () => {
           <span className="font-bold text-xl text-gradient">Linkgen3</span>
         </Link>
 
-        {/* Centered navigation links with improved font - shifted 20% to the right */}
-        <div className="hidden md:flex items-center justify-center flex-1 space-x-10 ml-[20%]">
+        {/* Centered navigation links with improved font - shifted 15% to the right */}
+        <div className="hidden md:flex items-center justify-center flex-1 space-x-10 ml-[15%]">
           <Link to="/" className="text-foreground hover:text-linkedin link-underline transition-colors font-medium tracking-wide text-base">
             Home
           </Link>
