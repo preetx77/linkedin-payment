@@ -34,7 +34,7 @@ const Navbar = () => {
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 lg:px-12 py-4 ${isScrolled ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg shadow-sm' : 'bg-transparent'}`}>
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <Link to="/" className="flex items-center space-x-2">
-          <span className="font-bold text-xl text-gradient">LinkedPost</span>
+          <span className="font-bold text-xl text-gradient">Linkgen3</span>
         </Link>
 
         <div className="hidden md:flex items-center space-x-8">
