@@ -10,7 +10,7 @@ import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/lib/auth/AuthContext';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -40,18 +40,29 @@ const Login = () => {
       return;
     }
     
-    try {
-      await login(email, password);
-    } catch (error) {
-      console.error('Login error:', error);
+    const result = await login(email, password);
+    if (!result.success && result.error) {
+      toast({
+        title: "Error",
+        description: result.error,
+        variant: "destructive",
+      });
+    } else if (result.success) {
+      toast({
+        title: "Success",
+        description: "You've successfully logged in",
+      });
     }
   };
   
   const handleGoogleLogin = async () => {
-    try {
-      await googleAuth();
-    } catch (error) {
-      console.error('Google login error:', error);
+    const result = await googleAuth();
+    if (!result.success && result.error) {
+      toast({
+        title: "Error",
+        description: result.error,
+        variant: "destructive",
+      });
     }
   };
   
@@ -67,7 +78,7 @@ const Login = () => {
         <div className="max-w-md mx-auto glass-card rounded-xl p-8 animate-fade-in">
           <div className="text-center mb-8">
             <h1 className="text-2xl font-bold mb-2">Welcome Back</h1>
-            <p className="text-muted-foreground">Log in to your Linkgen3 account</p>
+            <p className="text-muted-foreground">Log in to your account</p>
           </div>
           
           <form onSubmit={handleLogin} className="space-y-6">
