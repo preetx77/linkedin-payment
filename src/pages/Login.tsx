@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -10,17 +10,25 @@ import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { login, googleAuth, user, loading } = useAuth();
   
-  const handleLogin = (e: React.FormEvent) => {
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
+  
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!email || !password) {
@@ -32,32 +40,24 @@ const Login = () => {
       return;
     }
     
-    setIsLoading(true);
-    
-    // Simulate login - in a real app, this would be an API call
-    setTimeout(() => {
-      toast({
-        title: "Success",
-        description: "You've successfully logged in",
-      });
-      setIsLoading(false);
-      navigate('/dashboard');
-    }, 1500);
+    try {
+      await login(email, password);
+    } catch (error) {
+      console.error('Login error:', error);
+    }
   };
   
-  const handleGoogleLogin = () => {
-    setIsLoading(true);
-    
-    // Simulate Google OAuth login
-    setTimeout(() => {
-      toast({
-        title: "Success",
-        description: "You've successfully logged in with Google",
-      });
-      setIsLoading(false);
-      navigate('/dashboard');
-    }, 1500);
+  const handleGoogleLogin = async () => {
+    try {
+      await googleAuth();
+    } catch (error) {
+      console.error('Google login error:', error);
+    }
   };
+  
+  if (user) {
+    return null; // Prevent flash of login page before redirect
+  }
   
   return (
     <div className="min-h-screen bg-background">
@@ -67,7 +67,7 @@ const Login = () => {
         <div className="max-w-md mx-auto glass-card rounded-xl p-8 animate-fade-in">
           <div className="text-center mb-8">
             <h1 className="text-2xl font-bold mb-2">Welcome Back</h1>
-            <p className="text-muted-foreground">Log in to your LinkedPost account</p>
+            <p className="text-muted-foreground">Log in to your Linkgen3 account</p>
           </div>
           
           <form onSubmit={handleLogin} className="space-y-6">
@@ -132,9 +132,9 @@ const Login = () => {
             <Button 
               type="submit" 
               className="w-full bg-linkedin hover:bg-linkedin-dark text-white rounded-full"
-              disabled={isLoading}
+              disabled={loading}
             >
-              {isLoading ? (
+              {loading ? (
                 <div className="flex items-center gap-2">
                   <LoadingSpinner size="sm" />
                   <span>Logging in...</span>
@@ -159,7 +159,7 @@ const Login = () => {
             variant="outline" 
             className="w-full rounded-full"
             onClick={handleGoogleLogin}
-            disabled={isLoading}
+            disabled={loading}
           >
             <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
               <path

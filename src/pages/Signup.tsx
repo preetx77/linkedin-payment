@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -10,6 +10,7 @@ import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Signup = () => {
   const [name, setName] = useState('');
@@ -17,11 +18,18 @@ const Signup = () => {
   const [password, setPassword] = useState('');
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { signUp, googleAuth, user, loading } = useAuth();
   
-  const handleSignup = (e: React.FormEvent) => {
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
+  
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!name || !email || !password) {
@@ -42,32 +50,24 @@ const Signup = () => {
       return;
     }
     
-    setIsLoading(true);
-    
-    // Simulate signup - in a real app, this would be an API call
-    setTimeout(() => {
-      toast({
-        title: "Success",
-        description: "Your account has been created",
-      });
-      setIsLoading(false);
-      navigate('/dashboard');
-    }, 1500);
+    try {
+      await signUp(name, email, password);
+    } catch (error) {
+      console.error('Signup error:', error);
+    }
   };
   
-  const handleGoogleSignup = () => {
-    setIsLoading(true);
-    
-    // Simulate Google OAuth signup
-    setTimeout(() => {
-      toast({
-        title: "Success",
-        description: "Your account has been created with Google",
-      });
-      setIsLoading(false);
-      navigate('/dashboard');
-    }, 1500);
+  const handleGoogleSignup = async () => {
+    try {
+      await googleAuth();
+    } catch (error) {
+      console.error('Google signup error:', error);
+    }
   };
+  
+  if (user) {
+    return null; // Prevent flash of signup page before redirect
+  }
   
   return (
     <div className="min-h-screen bg-background">
@@ -161,9 +161,9 @@ const Signup = () => {
             <Button 
               type="submit" 
               className="w-full bg-linkedin hover:bg-linkedin-dark text-white rounded-full"
-              disabled={isLoading}
+              disabled={loading}
             >
-              {isLoading ? (
+              {loading ? (
                 <div className="flex items-center gap-2">
                   <LoadingSpinner size="sm" />
                   <span>Creating account...</span>
@@ -188,7 +188,7 @@ const Signup = () => {
             variant="outline" 
             className="w-full rounded-full"
             onClick={handleGoogleSignup}
-            disabled={isLoading}
+            disabled={loading}
           >
             <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
               <path
