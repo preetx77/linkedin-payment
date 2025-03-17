@@ -198,46 +198,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const googleAuth = async () => {
     setLoading(true);
     try {
-      // Log the attempt to help with debugging
-      console.log('Attempting Google authentication');
-      
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/dashboard`,
-          // Adding scopes for better user data
-          scopes: 'email profile'
+          redirectTo: `${window.location.origin}/dashboard`
         }
       });
 
-      console.log('Google auth response:', data, error);
-
       if (error) {
         // Special handling for provider not enabled error
-        if (error.message.includes('provider is not enabled') || error.message.includes('Provider is not enabled')) {
-          console.error('Google provider not enabled in Supabase:', error);
+        if (error.message.includes('provider is not enabled')) {
           toast({
-            title: "Google Login Not Available",
-            description: "Google authentication is not currently enabled. Please use email/password login or contact the administrator.",
+            title: "Error",
+            description: "Google authentication is not enabled. Please contact the administrator or use email/password login.",
             variant: "destructive",
           });
         } else {
-          console.error('Google auth error:', error);
           toast({
-            title: "Authentication Error",
+            title: "Error",
             description: error.message,
             variant: "destructive",
           });
         }
-      } else {
-        console.log('Google auth initiated successfully');
-        // No need for success toast here as the redirect will happen
       }
     } catch (error) {
-      console.error('Google auth exception:', error);
+      console.error('Google auth error:', error);
       toast({
         title: "Error",
-        description: "Failed to initiate Google login. Please try again or use email/password.",
+        description: "Failed to login with Google. Please try again.",
         variant: "destructive",
       });
     } finally {
