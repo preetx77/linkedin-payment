@@ -206,11 +206,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
 
       if (error) {
-        toast({
-          title: "Error",
-          description: error.message,
-          variant: "destructive",
-        });
+        // Special handling for provider not enabled error
+        if (error.message.includes('provider is not enabled')) {
+          toast({
+            title: "Error",
+            description: "Google authentication is not enabled. Please contact the administrator or use email/password login.",
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Error",
+            description: error.message,
+            variant: "destructive",
+          });
+        }
       }
     } catch (error) {
       console.error('Google auth error:', error);
