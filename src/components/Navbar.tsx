@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X, Moon, Sun, User } from 'lucide-react';
@@ -39,7 +38,6 @@ const Navbar = () => {
           <span className="font-bold text-xl text-gradient">Linkgen3</span>
         </Link>
 
-        {/* Centered navigation links with improved font - shifted 12% to the right */}
         <div className="hidden md:flex items-center justify-center flex-1 space-x-10 ml-[12%]">
           <Link to="/" className="text-foreground hover:text-linkedin link-underline transition-colors font-medium tracking-wide text-base">
             Home
@@ -104,7 +102,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile menu */}
       {isMenuOpen && (
         <div className="md:hidden absolute top-full left-0 right-0 bg-background border-b border-border p-4 shadow-lg animate-fade-in">
           <div className="flex flex-col space-y-4">

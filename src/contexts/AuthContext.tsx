@@ -3,10 +3,10 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Session, User } from '@supabase/supabase-js';
+import type { Session } from '@supabase/supabase-js';
 
 // Define user type
-export interface User {
+export interface AuthUser {
   id: string;
   email: string;
   name?: string;
@@ -14,7 +14,7 @@ export interface User {
 
 // Define the context type
 interface AuthContextType {
-  user: User | null;
+  user: AuthUser | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   signUp: (name: string, email: string, password: string) => Promise<void>;
@@ -35,7 +35,7 @@ export const useAuth = () => {
 };
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -47,7 +47,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setLoading(true);
         if (session) {
           // User is signed in
-          const userData: User = {
+          const userData: AuthUser = {
             id: session.user.id,
             email: session.user.email || '',
             name: session.user.user_metadata.name || session.user.email?.split('@')[0]
@@ -66,7 +66,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         const { data: { session } } = await supabase.auth.getSession();
         if (session) {
-          const userData: User = {
+          const userData: AuthUser = {
             id: session.user.id,
             email: session.user.email || '',
             name: session.user.user_metadata.name || session.user.email?.split('@')[0]
