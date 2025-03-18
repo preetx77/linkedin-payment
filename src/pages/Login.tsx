@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -10,25 +10,17 @@ import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import { useAuth } from '@/lib/auth/AuthContext';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { login, googleAuth, user, loading } = useAuth();
   
-  // Redirect if already logged in
-  useEffect(() => {
-    if (user) {
-      navigate('/dashboard');
-    }
-  }, [user, navigate]);
-  
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!email || !password) {
@@ -40,35 +32,32 @@ const Login = () => {
       return;
     }
     
-    const result = await login(email, password);
-    if (!result.success && result.error) {
-      toast({
-        title: "Error",
-        description: result.error,
-        variant: "destructive",
-      });
-    } else if (result.success) {
+    setIsLoading(true);
+    
+    // Simulate login - in a real app, this would be an API call
+    setTimeout(() => {
       toast({
         title: "Success",
         description: "You've successfully logged in",
       });
-    }
+      setIsLoading(false);
+      navigate('/dashboard');
+    }, 1500);
   };
   
-  const handleGoogleLogin = async () => {
-    const result = await googleAuth();
-    if (!result.success && result.error) {
+  const handleGoogleLogin = () => {
+    setIsLoading(true);
+    
+    // Simulate Google OAuth login
+    setTimeout(() => {
       toast({
-        title: "Error",
-        description: result.error,
-        variant: "destructive",
+        title: "Success",
+        description: "You've successfully logged in with Google",
       });
-    }
+      setIsLoading(false);
+      navigate('/dashboard');
+    }, 1500);
   };
-  
-  if (user) {
-    return null; // Prevent flash of login page before redirect
-  }
   
   return (
     <div className="min-h-screen bg-background">
@@ -78,7 +67,7 @@ const Login = () => {
         <div className="max-w-md mx-auto glass-card rounded-xl p-8 animate-fade-in">
           <div className="text-center mb-8">
             <h1 className="text-2xl font-bold mb-2">Welcome Back</h1>
-            <p className="text-muted-foreground">Log in to your account</p>
+            <p className="text-muted-foreground">Log in to your LinkedPost account</p>
           </div>
           
           <form onSubmit={handleLogin} className="space-y-6">
@@ -143,9 +132,9 @@ const Login = () => {
             <Button 
               type="submit" 
               className="w-full bg-linkedin hover:bg-linkedin-dark text-white rounded-full"
-              disabled={loading}
+              disabled={isLoading}
             >
-              {loading ? (
+              {isLoading ? (
                 <div className="flex items-center gap-2">
                   <LoadingSpinner size="sm" />
                   <span>Logging in...</span>
@@ -170,7 +159,7 @@ const Login = () => {
             variant="outline" 
             className="w-full rounded-full"
             onClick={handleGoogleLogin}
-            disabled={loading}
+            disabled={isLoading}
           >
             <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
               <path

@@ -1,136 +1,69 @@
+# Welcome to your Lovable project
 
-# Portable Authentication System
+## Project info
 
-This project includes a modular authentication system built with React and Supabase that can be easily imported into other AI code editors like Cursor AI.
+**URL**: https://lovable.dev/projects/be0bd5b7-e41c-4783-89d9-8b235ce0f5ba
 
-## How to Import into Another Project
+## How can I edit this code?
 
-### 1. Copy the Required Files
+There are several ways of editing your application.
 
-Copy these files to your new project:
+**Use Lovable**
 
-- `src/lib/auth/AuthContext.tsx`
-- `src/lib/auth/ProtectedRoute.tsx`
-- `src/lib/auth/setupAuth.tsx`
-- `src/integrations/supabase/client.ts`
+Simply visit the [Lovable Project](https://lovable.dev/projects/be0bd5b7-e41c-4783-89d9-8b235ce0f5ba) and start prompting.
 
-### 2. Setup Supabase
+Changes made via Lovable will be committed automatically to this repo.
 
-Make sure to configure your Supabase client with your project URL and key:
+**Use your preferred IDE**
 
-```typescript
-// src/integrations/supabase/client.ts
-import { createClient } from '@supabase/supabase-js';
+If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
 
-const SUPABASE_URL = "your-supabase-url";
-const SUPABASE_PUBLISHABLE_KEY = "your-supabase-key";
+The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
-export const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+Follow these steps:
+
+```sh
+# Step 1: Clone the repository using the project's Git URL.
+git clone <YOUR_GIT_URL>
+
+# Step 2: Navigate to the project directory.
+cd <YOUR_PROJECT_NAME>
+
+# Step 3: Install the necessary dependencies.
+npm i
+
+# Step 4: Start the development server with auto-reloading and an instant preview.
+npm run dev
 ```
 
-### 3. Add Authentication to Your App
+**Edit a file directly in GitHub**
 
-```typescript
-// App.tsx
-import { BrowserRouter } from "react-router-dom";
-import { AuthProvider } from "./lib/auth/AuthContext";
+- Navigate to the desired file(s).
+- Click the "Edit" button (pencil icon) at the top right of the file view.
+- Make your changes and commit the changes.
 
-function App() {
-  return (
-    <BrowserRouter>
-      <AuthProvider
-        redirectOnLogin="/dashboard"
-        redirectOnLogout="/"
-      >
-        {/* Your app components */}
-      </AuthProvider>
-    </BrowserRouter>
-  );
-}
-```
+**Use GitHub Codespaces**
 
-### 4. Create Protected Routes
+- Navigate to the main page of your repository.
+- Click on the "Code" button (green button) near the top right.
+- Select the "Codespaces" tab.
+- Click on "New codespace" to launch a new Codespace environment.
+- Edit files directly within the Codespace and commit and push your changes once you're done.
 
-```typescript
-// YourProtectedPage.tsx
-import ProtectedRoute from "./lib/auth/ProtectedRoute";
+## What technologies are used for this project?
 
-function YourApp() {
-  return (
-    <Routes>
-      <Route path="/login" element={<LoginPage />} />
-      <Route 
-        path="/dashboard" 
-        element={
-          <ProtectedRoute redirectTo="/login">
-            <DashboardPage />
-          </ProtectedRoute>
-        } 
-      />
-    </Routes>
-  );
-}
-```
+This project is built with .
 
-### 5. Use Authentication in Components
-
-```typescript
-import { useAuth } from "./lib/auth/AuthContext";
-
-function YourComponent() {
-  const { user, login, logout, signUp, googleAuth, loading } = useAuth();
-
-  const handleLogin = async () => {
-    const result = await login(email, password);
-    if (result.success) {
-      // Successfully logged in
-    } else {
-      // Handle error
-    }
-  };
-
-  return (
-    <div>
-      {user ? (
-        <p>Welcome, {user.name}!</p>
-      ) : (
-        <p>Please log in</p>
-      )}
-    </div>
-  );
-}
-```
-
-## Authentication Features
-
-This system provides:
-
-- Email/password login and signup
-- Google OAuth authentication
-- Protected routes
-- User state management
-- Loading states
-- Customizable redirects
-- Error handling
-
-## Customization
-
-You can customize the authentication behavior by passing props to the `AuthProvider`:
-
-```typescript
-<AuthProvider
-  redirectOnLogin="/custom-redirect"
-  redirectOnLogout="/"
-  onAuthStateChange={(user) => console.log("Auth state changed:", user)}
-  onAuthError={(error) => console.error("Auth error:", error)}
->
-  {/* Your app */}
-</AuthProvider>
-```
-
-## Requirements
-
+- Vite
+- TypeScript
 - React
-- Supabase JavaScript client
-- React Router (for navigation)
-```
+- shadcn-ui
+- Tailwind CSS
+
+## How can I deploy this project?
+
+Simply open [Lovable](https://lovable.dev/projects/be0bd5b7-e41c-4783-89d9-8b235ce0f5ba) and click on Share -> Publish.
+
+## I want to use a custom domain - is that possible?
+
+We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
