@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X, Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
@@ -13,6 +15,7 @@ const Navbar = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
   useEffect(() => {
     if (isDarkMode) {
       document.documentElement.classList.add('dark');
@@ -20,16 +23,17 @@ const Navbar = () => {
       document.documentElement.classList.remove('dark');
     }
   }, [isDarkMode]);
+
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
   };
+
   return <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 lg:px-12 py-4 ${isScrolled ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg shadow-sm' : 'bg-transparent'}`}>
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <Link to="/" className="flex items-center space-x-2">
-          <span className="text-2xl text-gradient font-bold">LinkGen</span>
+          <span className="text-2xl text-gradient font-bold animate-pulse-subtle relative after:content-[''] after:absolute after:inset-0 after:blur-lg after:bg-linkedin/30 after:-z-10">LinkGen</span>
         </Link>
 
-        {/* Centered navigation links with improved font - shifted 12% to the right */}
         <div className="hidden md:flex items-center justify-center flex-1 space-x-10 ml-[12%]">
           <Link to="/" className="text-foreground hover:text-linkedin link-underline transition-colors font-medium tracking-wide text-base">
             Home
@@ -66,7 +70,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile menu */}
       {isMenuOpen && <div className="md:hidden absolute top-full left-0 right-0 bg-background border-b border-border p-4 shadow-lg animate-fade-in">
           <div className="flex flex-col space-y-4">
             <Link to="/" className="text-foreground hover:text-linkedin py-2 px-4 rounded-md transition-colors font-medium tracking-wide text-center" onClick={() => setIsMenuOpen(false)}>
@@ -91,4 +94,5 @@ const Navbar = () => {
         </div>}
     </nav>;
 };
+
 export default Navbar;
