@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
@@ -10,6 +9,7 @@ import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import { signInWithEmail } from '@/lib/auth';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -20,7 +20,7 @@ const Login = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!email || !password) {
@@ -34,15 +34,22 @@ const Login = () => {
     
     setIsLoading(true);
     
-    // Simulate login - in a real app, this would be an API call
-    setTimeout(() => {
+    try {
+      await signInWithEmail(email, password);
       toast({
         title: "Success",
         description: "You've successfully logged in",
       });
-      setIsLoading(false);
       navigate('/dashboard');
-    }, 1500);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to log in",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
   
   const handleGoogleLogin = () => {

@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
@@ -10,6 +9,7 @@ import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import { signUpWithEmail } from '@/lib/auth';
 
 const Signup = () => {
   const [name, setName] = useState('');
@@ -20,8 +20,8 @@ const Signup = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
-  
-  const handleSignup = (e: React.FormEvent) => {
+
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!name || !email || !password) {
@@ -44,31 +44,24 @@ const Signup = () => {
     
     setIsLoading(true);
     
-    // Simulate signup - in a real app, this would be an API call
-    setTimeout(() => {
+    try {
+      await signUpWithEmail(email, password, name);
       toast({
         title: "Success",
-        description: "Your account has been created",
+        description: "Your account has been created. Please check your email for verification.",
       });
-      setIsLoading(false);
       navigate('/dashboard');
-    }, 1500);
-  };
-  
-  const handleGoogleSignup = () => {
-    setIsLoading(true);
-    
-    // Simulate Google OAuth signup
-    setTimeout(() => {
+    } catch (error: any) {
       toast({
-        title: "Success",
-        description: "Your account has been created with Google",
+        title: "Error",
+        description: error.message || "Failed to create account",
+        variant: "destructive",
       });
+    } finally {
       setIsLoading(false);
-      navigate('/dashboard');
-    }, 1500);
+    }
   };
-  
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
