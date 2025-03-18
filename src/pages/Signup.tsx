@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
@@ -60,6 +61,21 @@ const Signup = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+  
+  // Add the missing Google signup handler function
+  const handleGoogleSignup = () => {
+    setIsLoading(true);
+    
+    // Temporarily simulate Google OAuth signup
+    // This would be replaced with actual Supabase Google auth
+    setTimeout(() => {
+      toast({
+        title: "Coming Soon",
+        description: "Google signup will be implemented in a future update",
+      });
+      setIsLoading(false);
+    }, 1000);
   };
 
   return (
