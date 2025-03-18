@@ -1,16 +1,12 @@
-
 import { Link } from 'react-router-dom';
-
 const Footer = () => {
   const currentYear = new Date().getFullYear();
-  
-  return (
-    <footer className="bg-background border-t border-border">
+  return <footer className="bg-background border-t border-border">
       <div className="container mx-auto px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-1">
             <Link to="/" className="flex items-center mb-4">
-              <span className="font-bold text-xl text-gradient">Linkgen3</span>
+              <span className="text-xl text-gradient font-bold text-center">LinkGen</span>
             </Link>
             <p className="text-muted-foreground text-sm">
               AI-powered LinkedIn post generator helping professionals create engaging content.
@@ -65,8 +61,6 @@ const Footer = () => {
           </div>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
-
 export default Footer;
