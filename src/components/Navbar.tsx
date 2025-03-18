@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X, Moon, Sun } from 'lucide-react';
@@ -32,11 +31,7 @@ const Navbar = () => {
   return <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 lg:px-12 py-4 ${isScrolled ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg shadow-sm' : 'bg-transparent'}`}>
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <Link to="/" className="flex items-center space-x-2">
-          <span className="text-2xl font-bold relative group">
-            <span className="text-gradient animate-pulse-subtle">LinkGen</span>
-            <span className="absolute inset-0 -z-10 animate-glow blur-lg bg-gradient-to-r from-linkedin via-linkedin-light to-linkedin opacity-75 group-hover:opacity-100 transition-opacity duration-500"></span>
-            <span className="absolute inset-0 -z-20 animate-move-gradient bg-gradient-to-r from-linkedin-light via-linkedin to-linkedin-light opacity-50 blur-xl"></span>
-          </span>
+          <span className="text-2xl text-gradient font-bold animate-pulse-subtle relative after:content-[''] after:absolute after:inset-0 after:blur-lg after:bg-linkedin/30 after:-z-10">LinkGen</span>
         </Link>
 
         <div className="hidden md:flex items-center justify-center flex-1 space-x-10 ml-[12%]">

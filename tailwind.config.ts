@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -95,16 +96,6 @@ export default {
         'shimmer': {
           '0%': { backgroundPosition: '-468px 0' },
           '100%': { backgroundPosition: '468px 0' }
-        },
-        'move-gradient': {
-          '0%, 100%': { backgroundPosition: '0% 50%' },
-          '50%': { backgroundPosition: '100% 50%' },
-        },
-        'glow': {
-          '0%, 100%': { transform: 'translate(0px, 0px)' },
-          '25%': { transform: 'translate(-2px, 2px)' },
-          '50%': { transform: 'translate(2px, -2px)' },
-          '75%': { transform: 'translate(2px, 2px)' },
         }
       },
       animation: {
@@ -114,9 +105,7 @@ export default {
         'fade-out': 'fade-out 0.5s ease-out',
         'slide-in': 'slide-in 0.3s ease-out',
         'pulse-subtle': 'pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'shimmer': 'shimmer 2s infinite linear',
-        'move-gradient': 'move-gradient 8s ease infinite',
-        'glow': 'glow 6s ease-in-out infinite',
+        'shimmer': 'shimmer 2s infinite linear'
       }
     }
   },
