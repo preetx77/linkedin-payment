@@ -4,6 +4,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import HeroSection from '@/components/HeroSection';
 import FeaturesSection from '@/components/FeaturesSection';
+import PostGenerator from '@/components/PostGenerator'; // Import the PostGenerator component
 import { Button } from '@/components/ui/button';
 import { ArrowRight, CheckCircle } from 'lucide-react';
 
@@ -36,6 +37,24 @@ const Index = () => {
       <main>
         <HeroSection />
         <FeaturesSection />
+        
+        {/* Post Generator Section */}
+        <section className="py-24 bg-gradient-to-b from-background to-secondary/10">
+          <div className="container mx-auto px-4">
+            <div className="max-w-3xl mx-auto text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold mb-6">
+                Generate LinkedIn Posts in Seconds
+              </h2>
+              <p className="text-muted-foreground text-lg">
+                Try our AI-powered LinkedIn post generator below
+              </p>
+            </div>
+            
+            <div className="max-w-4xl mx-auto">
+              <PostGenerator />
+            </div>
+          </div>
+        </section>
         
         {/* How It Works Section */}
         <section className="py-24">

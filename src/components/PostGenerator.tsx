@@ -9,7 +9,10 @@ import {
   RefreshCw, 
   Sparkles, 
   User, 
-  Edit
+  Edit,
+  Save,
+  BookmarkIcon,
+  Trash
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import LoadingSpinner from './LoadingSpinner';
@@ -26,16 +29,28 @@ const PostGenerator = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [charCount, setCharCount] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
+  const [savedDrafts, setSavedDrafts] = useState<{id: string, content: string, date: string}[]>([]);
+  const [activeTab, setActiveTab] = useState('generate');
   
   const handleAddCreator = () => {
     if (referenceCreator && !referenceCreators.includes(referenceCreator)) {
       setReferenceCreators([...referenceCreators, referenceCreator]);
       setReferenceCreator('');
+      
+      toast({
+        title: "Reference added",
+        description: `${referenceCreator} added as a reference account.`,
+      });
     }
   };
   
   const handleRemoveCreator = (creator: string) => {
     setReferenceCreators(referenceCreators.filter(c => c !== creator));
+    
+    toast({
+      title: "Reference removed",
+      description: `${creator} removed from reference accounts.`,
+    });
   };
   
   const handleGeneratePost = () => {
@@ -52,11 +67,21 @@ const PostGenerator = () => {
     
     // Simulate post generation - in a real app, this would be an API call
     setTimeout(() => {
-      const simulatedPost = `🚀 Excited to share some insights on ${postIdea}!\n\nOver the past few weeks, I've been exploring this topic in depth and found some fascinating patterns that could revolutionize how we approach this challenge.\n\nKey takeaways:\n\n1️⃣ Start with a clear understanding of your audience\n2️⃣ Focus on delivering tangible value in every interaction\n3️⃣ Consistency beats perfection every time\n\nWhat strategies have worked for you? Let me know in the comments below!\n\n#ProfessionalDevelopment #CareerGrowth #LinkedIn`;
+      let referencesText = '';
+      if (referenceCreators.length > 0) {
+        referencesText = `\n\nThis post is inspired by the writing styles of ${referenceCreators.join(', ')}.`;
+      }
+      
+      const simulatedPost = `🚀 Excited to share some insights on ${postIdea}!\n\nOver the past few weeks, I've been exploring this topic in depth and found some fascinating patterns that could revolutionize how we approach this challenge.\n\nKey takeaways:\n\n1️⃣ Start with a clear understanding of your audience\n2️⃣ Focus on delivering tangible value in every interaction\n3️⃣ Consistency beats perfection every time\n\nWhat strategies have worked for you? Let me know in the comments below!${referencesText}\n\n#ProfessionalDevelopment #CareerGrowth #LinkedIn`;
       
       setGeneratedPost(simulatedPost);
       setCharCount(simulatedPost.length);
       setIsGenerating(false);
+      
+      toast({
+        title: "Post generated",
+        description: "Your LinkedIn post has been created successfully.",
+      });
     }, 2000);
   };
   
@@ -73,12 +98,57 @@ const PostGenerator = () => {
     setCharCount(e.target.value.length);
   };
   
+  const handleSaveDraft = () => {
+    if (!generatedPost) {
+      toast({
+        title: "No content",
+        description: "Please generate or write a post before saving as draft.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    const newDraft = {
+      id: Date.now().toString(),
+      content: generatedPost,
+      date: new Date().toLocaleDateString()
+    };
+    
+    setSavedDrafts([...savedDrafts, newDraft]);
+    
+    toast({
+      title: "Draft saved",
+      description: "Your post has been saved as a draft.",
+    });
+  };
+  
+  const handleLoadDraft = (draftContent: string) => {
+    setGeneratedPost(draftContent);
+    setCharCount(draftContent.length);
+    setActiveTab('generate');
+    
+    toast({
+      title: "Draft loaded",
+      description: "Your saved draft has been loaded for editing.",
+    });
+  };
+  
+  const handleDeleteDraft = (draftId: string) => {
+    setSavedDrafts(savedDrafts.filter(draft => draft.id !== draftId));
+    
+    toast({
+      title: "Draft deleted",
+      description: "Your draft has been removed.",
+    });
+  };
+  
   return (
-    <div className="glass-card rounded-xl p-6 md:p-8 animate-fade-in">
-      <Tabs defaultValue="generate" className="w-full">
-        <TabsList className="grid grid-cols-2 mb-6">
+    <div className="glass-card rounded-xl p-6 md:p-8 animate-fade-in shadow-lg">
+      <Tabs defaultValue="generate" className="w-full" onValueChange={setActiveTab}>
+        <TabsList className="grid grid-cols-3 mb-6">
           <TabsTrigger value="generate">Generate Post</TabsTrigger>
           <TabsTrigger value="settings">Settings</TabsTrigger>
+          <TabsTrigger value="drafts">Saved Drafts ({savedDrafts.length})</TabsTrigger>
         </TabsList>
         
         <TabsContent value="generate" className="space-y-6">
@@ -103,6 +173,12 @@ const PostGenerator = () => {
                 placeholder="Add LinkedIn creator's name"
                 value={referenceCreator}
                 onChange={(e) => setReferenceCreator(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && referenceCreator) {
+                    e.preventDefault();
+                    handleAddCreator();
+                  }
+                }}
               />
               <Button variant="outline" onClick={handleAddCreator}>
                 Add
@@ -172,6 +248,15 @@ const PostGenerator = () => {
                   >
                     <Copy size={14} />
                     <span>Copy</span>
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="gap-1"
+                    onClick={handleSaveDraft}
+                  >
+                    <Save size={14} />
+                    <span>Save</span>
                   </Button>
                   <Button 
                     variant="outline" 
@@ -250,6 +335,57 @@ const PostGenerator = () => {
               </Button>
             </div>
           </div>
+        </TabsContent>
+        
+        <TabsContent value="drafts" className="space-y-6">
+          {savedDrafts.length > 0 ? (
+            <div className="grid gap-4">
+              {savedDrafts.map((draft) => (
+                <div key={draft.id} className="border border-border rounded-lg p-4 bg-background">
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="text-sm text-muted-foreground">
+                      Saved on {draft.date}
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleLoadDraft(draft.content)}
+                      >
+                        <BookmarkIcon size={14} />
+                        <span className="sr-only">Load draft</span>
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDeleteDraft(draft.id)}
+                      >
+                        <Trash size={14} />
+                        <span className="sr-only">Delete draft</span>
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="text-sm line-clamp-3 whitespace-pre-wrap">
+                    {draft.content}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <BookmarkIcon className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+              <h3 className="text-lg font-medium mb-2">No saved drafts</h3>
+              <p className="text-muted-foreground mb-6">
+                Generate a post and save it to see your drafts here
+              </p>
+              <Button 
+                variant="outline" 
+                onClick={() => setActiveTab('generate')}
+              >
+                Create a post
+              </Button>
+            </div>
+          )}
         </TabsContent>
       </Tabs>
     </div>
