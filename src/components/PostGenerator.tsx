@@ -24,9 +24,10 @@ const MAX_LINKEDIN_CHARS = 3000;
 
 interface PostGeneratorProps {
   isHomeScreen?: boolean;
+  isDashboard?: boolean;
 }
 
-const PostGenerator = ({ isHomeScreen = false }: PostGeneratorProps) => {
+const PostGenerator = ({ isHomeScreen = false, isDashboard = false }: PostGeneratorProps) => {
   const { toast } = useToast();
   const { user } = useAuth();
   const [postIdea, setPostIdea] = useState('');
@@ -186,8 +187,14 @@ const PostGenerator = ({ isHomeScreen = false }: PostGeneratorProps) => {
     </div>
   );
   
+  const cardClasses = () => {
+    if (isDashboard) return 'glass-card rounded-xl p-6 md:p-8 animate-fade-in shadow-lg';
+    if (isHomeScreen) return 'glass-card rounded-xl p-6 md:p-8 animate-fade-in shadow-lg bg-background/95';
+    return 'glass-card rounded-xl p-6 md:p-8 animate-fade-in shadow-lg';
+  };
+  
   return (
-    <div className={`glass-card rounded-xl p-6 md:p-8 animate-fade-in shadow-lg ${isHomeScreen ? 'bg-background/95' : ''}`}>
+    <div className={cardClasses()}>
       <Tabs defaultValue="generate" className="w-full" onValueChange={setActiveTab}>
         <TabsList className="grid grid-cols-3 mb-6">
           <TabsTrigger value="generate">Generate Post</TabsTrigger>
