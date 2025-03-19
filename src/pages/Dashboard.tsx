@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -18,10 +19,6 @@ const Dashboard = () => {
           <div className="mb-8">
             <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
             <p className="text-muted-foreground">Create and manage your LinkedIn posts</p>
-          </div>
-          
-          <div className="mb-8">
-            <PostGenerator isDashboard={true} />
           </div>
           
           <div className="grid grid-cols-12 gap-6">
@@ -113,7 +110,9 @@ const Dashboard = () => {
             </div>
             
             <div className="col-span-12 lg:col-span-9">
-              <Tabs defaultValue="analytics" value={activeTab === 'generate' ? 'analytics' : activeTab} onValueChange={setActiveTab}>
+              <PostGenerator isDashboard={true} />
+              
+              <Tabs defaultValue="analytics" value={activeTab === 'generate' ? 'analytics' : activeTab} onValueChange={setActiveTab} className="mt-6">
                 <TabsContent value="analytics" className="mt-0">
                   <Card className="glass-card">
                     <CardHeader>
