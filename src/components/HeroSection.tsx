@@ -2,6 +2,7 @@
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
+import PostGenerator from '@/components/PostGenerator';
 
 const HeroSection = () => {
   return (
@@ -45,19 +46,9 @@ const HeroSection = () => {
           </div>
         </div>
         
-        {/* Preview image */}
-        <div className="mt-16 glass-card rounded-xl shadow-2xl mx-auto max-w-5xl overflow-hidden animate-fade-in" style={{ animationDelay: '400ms' }}>
-          <div className="relative aspect-[16/9] bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center">
-            <div className="text-center text-white absolute inset-0 flex flex-col items-center justify-center">
-              <div className="w-3/4 h-8 bg-white/10 rounded-lg mb-4"></div>
-              <div className="w-1/2 h-8 bg-white/10 rounded-lg mb-8"></div>
-              <div className="w-5/6 h-5 bg-white/10 rounded-lg mb-3"></div>
-              <div className="w-5/6 h-5 bg-white/10 rounded-lg mb-3"></div>
-              <div className="w-5/6 h-5 bg-white/10 rounded-lg mb-3"></div>
-              <div className="w-1/2 h-5 bg-white/10 rounded-lg"></div>
-              <div className="absolute bottom-6 right-6 w-36 h-10 bg-linkedin rounded-lg flex items-center justify-center text-sm font-medium">Generate Post</div>
-            </div>
-          </div>
+        {/* Post Generator moved here */}
+        <div className="mt-16 mx-auto max-w-5xl animate-fade-in" style={{ animationDelay: '400ms' }}>
+          <PostGenerator />
         </div>
       </div>
     </section>
