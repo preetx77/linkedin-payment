@@ -3,8 +3,11 @@ import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import PostGenerator from '@/components/PostGenerator';
+import { useAuth } from '@/contexts/AuthContext';
 
 const HeroSection = () => {
+  const { user } = useAuth();
+  
   return (
     <section className="relative pt-32 pb-24 overflow-hidden">
       {/* Background gradient */}
@@ -46,9 +49,9 @@ const HeroSection = () => {
           </div>
         </div>
         
-        {/* Post Generator moved here */}
-        <div className="mt-16 mx-auto max-w-5xl animate-fade-in" style={{ animationDelay: '400ms' }}>
-          <PostGenerator />
+        {/* Post Generator with border */}
+        <div className="mt-16 mx-auto max-w-5xl animate-fade-in border-4 border-linkedin rounded-xl p-2" style={{ animationDelay: '400ms' }}>
+          <PostGenerator isHomeScreen={true} />
         </div>
       </div>
     </section>

@@ -12,19 +12,26 @@ import {
   Edit,
   Save,
   BookmarkIcon,
-  Trash
+  Trash,
+  LogIn
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import LoadingSpinner from './LoadingSpinner';
+import { useAuth } from '@/contexts/AuthContext';
+import { Link } from 'react-router-dom';
 
 const MAX_LINKEDIN_CHARS = 3000;
 
-const PostGenerator = () => {
+interface PostGeneratorProps {
+  isHomeScreen?: boolean;
+}
+
+const PostGenerator = ({ isHomeScreen = false }: PostGeneratorProps) => {
   const { toast } = useToast();
+  const { user } = useAuth();
   const [postIdea, setPostIdea] = useState('');
   const [referenceCreator, setReferenceCreator] = useState('');
   const [referenceCreators, setReferenceCreators] = useState<string[]>([]);
-  const [model, setModel] = useState('gpt4');
   const [generatedPost, setGeneratedPost] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [charCount, setCharCount] = useState(0);
@@ -58,6 +65,16 @@ const PostGenerator = () => {
       toast({
         title: "Input required",
         description: "Please enter a post idea to generate content.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Check if user is logged in
+    if (!user) {
+      toast({
+        title: "Authentication required",
+        description: "Please sign in to generate posts.",
         variant: "destructive"
       });
       return;
@@ -108,6 +125,16 @@ const PostGenerator = () => {
       return;
     }
     
+    // Check if user is logged in
+    if (!user) {
+      toast({
+        title: "Authentication required",
+        description: "Please sign in to save drafts.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     const newDraft = {
       id: Date.now().toString(),
       content: generatedPost,
@@ -142,8 +169,25 @@ const PostGenerator = () => {
     });
   };
   
+  const renderAuthButtons = () => (
+    <div className="text-center p-6">
+      <p className="text-muted-foreground mb-4">Sign in to generate and save LinkedIn posts</p>
+      <div className="flex justify-center gap-4">
+        <Link to="/login">
+          <Button className="bg-linkedin hover:bg-linkedin-dark text-white gap-2">
+            <LogIn size={16} />
+            Sign In
+          </Button>
+        </Link>
+        <Link to="/signup">
+          <Button variant="outline">Sign Up</Button>
+        </Link>
+      </div>
+    </div>
+  );
+  
   return (
-    <div className="glass-card rounded-xl p-6 md:p-8 animate-fade-in shadow-lg">
+    <div className={`glass-card rounded-xl p-6 md:p-8 animate-fade-in shadow-lg ${isHomeScreen ? 'bg-background/95' : ''}`}>
       <Tabs defaultValue="generate" className="w-full" onValueChange={setActiveTab}>
         <TabsList className="grid grid-cols-3 mb-6">
           <TabsTrigger value="generate">Generate Post</TabsTrigger>
@@ -207,23 +251,27 @@ const PostGenerator = () => {
           </div>
           
           <div className="flex justify-center">
-            <Button 
-              className="bg-linkedin hover:bg-linkedin-dark text-white px-6 gap-2"
-              onClick={handleGeneratePost}
-              disabled={isGenerating || !postIdea}
-            >
-              {isGenerating ? (
-                <>
-                  <LoadingSpinner size="sm" />
-                  <span>Generating...</span>
-                </>
-              ) : (
-                <>
-                  <Sparkles size={16} />
-                  <span>Generate Post</span>
-                </>
-              )}
-            </Button>
+            {!user && isHomeScreen ? (
+              renderAuthButtons()
+            ) : (
+              <Button 
+                className="bg-linkedin hover:bg-linkedin-dark text-white px-6 gap-2"
+                onClick={handleGeneratePost}
+                disabled={isGenerating || !postIdea}
+              >
+                {isGenerating ? (
+                  <>
+                    <LoadingSpinner size="sm" />
+                    <span>Generating...</span>
+                  </>
+                ) : (
+                  <>
+                    <Sparkles size={16} />
+                    <span>Generate Post</span>
+                  </>
+                )}
+              </Button>
+            )}
           </div>
           
           {generatedPost && (
@@ -293,36 +341,6 @@ const PostGenerator = () => {
         <TabsContent value="settings" className="space-y-6">
           <div>
             <label className="block text-sm font-medium mb-2">
-              AI Model
-            </label>
-            <div className="grid grid-cols-2 gap-4">
-              <div
-                className={`border rounded-lg p-4 cursor-pointer transition-all ${
-                  model === 'gpt4' 
-                    ? 'border-linkedin bg-linkedin/5' 
-                    : 'border-border hover:border-linkedin/30'
-                }`}
-                onClick={() => setModel('gpt4')}
-              >
-                <div className="font-medium mb-1">GPT-4</div>
-                <div className="text-sm text-muted-foreground">Advanced language model with excellent writing capabilities</div>
-              </div>
-              <div
-                className={`border rounded-lg p-4 cursor-pointer transition-all ${
-                  model === 'deepseek' 
-                    ? 'border-linkedin bg-linkedin/5' 
-                    : 'border-border hover:border-linkedin/30'
-                }`}
-                onClick={() => setModel('deepseek')}
-              >
-                <div className="font-medium mb-1">DeepSeek</div>
-                <div className="text-sm text-muted-foreground">Specialized model trained on professional content</div>
-              </div>
-            </div>
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium mb-2">
               Writing Style Training
             </label>
             <div className="border border-border rounded-lg p-6 text-center">
@@ -335,10 +353,18 @@ const PostGenerator = () => {
               </Button>
             </div>
           </div>
+
+          {!user && isHomeScreen && (
+            <div className="mt-6">
+              {renderAuthButtons()}
+            </div>
+          )}
         </TabsContent>
         
         <TabsContent value="drafts" className="space-y-6">
-          {savedDrafts.length > 0 ? (
+          {!user && isHomeScreen ? (
+            renderAuthButtons()
+          ) : savedDrafts.length > 0 ? (
             <div className="grid gap-4">
               {savedDrafts.map((draft) => (
                 <div key={draft.id} className="border border-border rounded-lg p-4 bg-background">
