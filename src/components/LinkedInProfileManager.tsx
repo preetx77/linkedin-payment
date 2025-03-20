@@ -8,6 +8,51 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, RefreshCw, PlusCircle, Trash2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
+const ProfileList = ({ profiles, onRefresh, isFetching }: { 
+  profiles: LinkedInProfile[], 
+  onRefresh: () => void,
+  isFetching: boolean
+}) => {
+  if (profiles.length === 0) {
+    return (
+      <div className="border border-dashed rounded-lg p-6 text-center">
+        <p className="text-muted-foreground text-sm">
+          {isFetching ? 'Loading profiles...' : 'No reference profiles added yet'}
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid gap-3">
+      {profiles.map((profile) => (
+        <Card key={profile.id} className="bg-card/50">
+          <CardHeader className="p-4 pb-2">
+            <CardTitle className="text-base font-medium">
+              {profile.username}
+            </CardTitle>
+            <CardDescription className="text-xs truncate">
+              {profile.profile_url}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="p-4 pt-0 pb-2">
+            <div className="text-xs text-muted-foreground">
+              <p>Posts analyzed: {profile.posts_count}</p>
+              <p>Last scraped: {new Date(profile.last_scraped).toLocaleDateString()}</p>
+            </div>
+          </CardContent>
+          <CardFooter className="p-2 flex justify-end">
+            <Button variant="ghost" size="sm" className="h-8 px-2 text-xs text-muted-foreground hover:text-destructive">
+              <Trash2 className="h-3 w-3 mr-1" />
+              Remove
+            </Button>
+          </CardFooter>
+        </Card>
+      ))}
+    </div>
+  );
+};
+
 const LinkedInProfileManager = () => {
   const { toast } = useToast();
   const { user } = useAuth();
@@ -147,40 +192,11 @@ const LinkedInProfileManager = () => {
           </Button>
         </div>
         
-        {profiles.length > 0 ? (
-          <div className="grid gap-3">
-            {profiles.map((profile) => (
-              <Card key={profile.id} className="bg-card/50">
-                <CardHeader className="p-4 pb-2">
-                  <CardTitle className="text-base font-medium">
-                    {profile.username}
-                  </CardTitle>
-                  <CardDescription className="text-xs truncate">
-                    {profile.profile_url}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="p-4 pt-0 pb-2">
-                  <div className="text-xs text-muted-foreground">
-                    <p>Posts analyzed: {profile.posts_count}</p>
-                    <p>Last scraped: {new Date(profile.last_scraped).toLocaleDateString()}</p>
-                  </div>
-                </CardContent>
-                <CardFooter className="p-2 flex justify-end">
-                  <Button variant="ghost" size="sm" className="h-8 px-2 text-xs text-muted-foreground hover:text-destructive">
-                    <Trash2 className="h-3 w-3 mr-1" />
-                    Remove
-                  </Button>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
-        ) : (
-          <div className="border border-dashed rounded-lg p-6 text-center">
-            <p className="text-muted-foreground text-sm">
-              {isFetching ? 'Loading profiles...' : 'No reference profiles added yet'}
-            </p>
-          </div>
-        )}
+        <ProfileList 
+          profiles={profiles} 
+          onRefresh={fetchProfiles}
+          isFetching={isFetching}
+        />
       </div>
     </div>
   );
