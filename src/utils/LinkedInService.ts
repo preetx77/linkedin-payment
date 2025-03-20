@@ -1,6 +1,7 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
+import { Json } from '@/integrations/supabase/types';
 
 export interface LinkedInProfile {
   id: string;
@@ -15,7 +16,7 @@ export interface GeneratedPost {
   content: string;
   prompt: string;
   created_at: string;
-  reference_profiles?: string;
+  reference_profiles?: Json; // Changed from string to Json to match the database type
 }
 
 export const LinkedInService = {
@@ -123,12 +124,22 @@ export const LinkedInService = {
 
   async savePost(content: string, prompt: string, referenceProfiles: LinkedInProfile[] = []): Promise<{ success: boolean; postId?: string; error?: string }> {
     try {
+      // Get current user session
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        return { success: false, error: 'Authentication required' };
+      }
+
+      // Convert referenceProfiles array to JSON if needed
+      const refProfiles = referenceProfiles.length > 0 ? JSON.stringify(referenceProfiles) : null;
+
       const { data, error } = await supabase
         .from('generated_posts')
         .insert({
           content,
           prompt,
-          reference_profiles: referenceProfiles.length > 0 ? JSON.stringify(referenceProfiles) : null,
+          reference_profiles: refProfiles,
+          user_id: session.user.id, // Adding the user_id which was missing
         })
         .select('id')
         .single();
