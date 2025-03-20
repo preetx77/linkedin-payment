@@ -1,6 +1,5 @@
-
 import { supabase } from '@/integrations/supabase/client';
-import { toast } from '@/hooks/use-toast';
+import { toast } from '@/components/ui/use-toast';
 import { Json } from '@/integrations/supabase/types';
 
 export interface LinkedInProfile {
@@ -29,19 +28,37 @@ export const LinkedInService = {
       }
 
       // Call the scrape-linkedin edge function
-      const { data, error } = await supabase.functions.invoke('scrape-linkedin', {
+      const response = await supabase.functions.invoke('scrape-linkedin', {
         body: { profileUrl },
       });
 
-      if (error) {
-        console.error('Error scraping LinkedIn profile:', error);
-        return { success: false, error: error.message || 'Failed to scrape profile' };
+      if (response.error) {
+        console.error('Error scraping LinkedIn profile:', response.error);
+        return { 
+          success: false, 
+          error: response.error.message || 'Failed to scrape profile' 
+        };
       }
 
-      return { success: true, profile: data.profile };
+      // Check for application-level errors returned with a 200 status
+      if (response.data && response.data.error) {
+        console.error('Application error:', response.data.error);
+        return { 
+          success: false, 
+          error: response.data.error 
+        };
+      }
+
+      return { 
+        success: true, 
+        profile: response.data.profile 
+      };
     } catch (error) {
       console.error('Error in scrapeProfile:', error);
-      return { success: false, error: error instanceof Error ? error.message : 'An unknown error occurred' };
+      return { 
+        success: false, 
+        error: error instanceof Error ? error.message : 'An unknown error occurred' 
+      };
     }
   },
 
@@ -55,7 +72,7 @@ export const LinkedInService = {
       if (error) {
         console.error('Error fetching LinkedIn profiles:', error);
         toast({
-          title: 'Error',
+          title: "Error",
           description: 'Failed to fetch LinkedIn profiles',
           variant: 'destructive',
         });
@@ -78,23 +95,38 @@ export const LinkedInService = {
       }
 
       // Call the generate-post edge function
-      const { data, error } = await supabase.functions.invoke('generate-post', {
+      const response = await supabase.functions.invoke('generate-post', {
         body: { prompt, referenceProfiles },
       });
 
-      if (error) {
-        console.error('Error generating LinkedIn post:', error);
-        return { success: false, error: error.message || 'Failed to generate post' };
+      if (response.error) {
+        console.error('Error generating LinkedIn post:', response.error);
+        return { 
+          success: false, 
+          error: response.error.message || 'Failed to generate post' 
+        };
+      }
+
+      // Check for application-level errors returned with a 200 status
+      if (response.data && response.data.error) {
+        console.error('Application error:', response.data.error);
+        return { 
+          success: false, 
+          error: response.data.error 
+        };
       }
 
       return { 
         success: true, 
-        post: data.post,
-        postId: data.postId
+        post: response.data.post,
+        postId: response.data.postId
       };
     } catch (error) {
       console.error('Error in generatePost:', error);
-      return { success: false, error: error instanceof Error ? error.message : 'An unknown error occurred' };
+      return { 
+        success: false, 
+        error: error instanceof Error ? error.message : 'An unknown error occurred' 
+      };
     }
   },
 

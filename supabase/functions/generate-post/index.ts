@@ -69,7 +69,8 @@ serve(async (req) => {
         referencePosts = posts.map(post => post.content);
         
         // Generate reference analysis with Gemini
-        const analysisResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${geminiApiKey}`, {
+        // Updated API endpoint to use the AI API version
+        const analysisResponse = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${geminiApiKey}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -122,8 +123,8 @@ serve(async (req) => {
     
     console.log('Making request to Gemini API');
     
-    // Make request to Gemini API
-    const geminiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${geminiApiKey}`, {
+    // Make request to Gemini API - updated API endpoint to use the AI API version
+    const geminiResponse = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${geminiApiKey}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -147,7 +148,10 @@ serve(async (req) => {
     if (!geminiResponse.ok) {
       const errorData = await geminiResponse.json();
       console.error('Gemini API error response:', errorData);
-      throw new Error(`Gemini API error: ${JSON.stringify(errorData)}`);
+      return new Response(
+        JSON.stringify({ error: `Gemini API error: ${JSON.stringify(errorData)}` }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
     const geminiData = await geminiResponse.json();
@@ -158,7 +162,10 @@ serve(async (req) => {
       console.log('Successfully generated post');
     } else {
       console.error('Failed to generate content from Gemini API', geminiData);
-      throw new Error("Failed to generate content from Gemini API");
+      return new Response(
+        JSON.stringify({ error: "Failed to generate content from Gemini API" }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
     // Store the generated post
@@ -176,6 +183,7 @@ serve(async (req) => {
 
     if (postError) {
       console.error('Error storing generated post:', postError);
+      // Continue even if storing fails - we'll return the generated post anyway
     } else {
       console.log(`Stored generated post with ID: ${postData.id}`);
     }
