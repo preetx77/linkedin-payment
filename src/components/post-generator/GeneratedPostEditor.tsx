@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Edit, Copy, Save, RefreshCw } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 const MAX_LINKEDIN_CHARS = 3000;
 
@@ -79,8 +80,17 @@ const GeneratedPostEditor = ({
             onClick={onRegenerate}
             disabled={isGenerating}
           >
-            <RefreshCw size={14} className={isGenerating ? "animate-spin" : ""} />
-            <span>Regenerate</span>
+            {isGenerating ? (
+              <>
+                <LoadingSpinner size="sm" />
+                <span>Regenerating...</span>
+              </>
+            ) : (
+              <>
+                <RefreshCw size={14} />
+                <span>Regenerate</span>
+              </>
+            )}
           </Button>
         </div>
       </div>

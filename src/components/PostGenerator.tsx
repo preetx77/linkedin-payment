@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
@@ -24,12 +23,26 @@ const PostGenerator = ({ isHomeScreen = false, isDashboard = false }: PostGenera
   const [activeTab, setActiveTab] = useState('generate');
   const [selectedProfiles, setSelectedProfiles] = useState<LinkedInProfile[]>([]);
   const [isLoadingDrafts, setIsLoadingDrafts] = useState(false);
+  const [availableProfiles, setAvailableProfiles] = useState<LinkedInProfile[]>([]);
   
   useEffect(() => {
     if (user && activeTab === 'drafts') {
       fetchSavedDrafts();
     }
+    
+    if (user && activeTab === 'reference') {
+      fetchProfiles();
+    }
   }, [user, activeTab]);
+  
+  const fetchProfiles = async () => {
+    try {
+      const profiles = await LinkedInService.getProfiles();
+      setAvailableProfiles(profiles);
+    } catch (error) {
+      console.error('Error fetching profiles:', error);
+    }
+  };
 
   const fetchSavedDrafts = async () => {
     if (!user) return;
@@ -98,6 +111,14 @@ const PostGenerator = ({ isHomeScreen = false, isDashboard = false }: PostGenera
       });
     } finally {
       setIsGenerating(false);
+    }
+  };
+  
+  const handleSelectProfile = (profile: LinkedInProfile) => {
+    if (selectedProfiles.some(p => p.id === profile.id)) {
+      setSelectedProfiles(selectedProfiles.filter(p => p.id !== profile.id));
+    } else {
+      setSelectedProfiles([...selectedProfiles, profile]);
     }
   };
   
@@ -212,6 +233,7 @@ const PostGenerator = ({ isHomeScreen = false, isDashboard = false }: PostGenera
             isGenerating={isGenerating}
             onGenerate={handleGeneratePost}
             isHomeScreen={isHomeScreen}
+            hasReferenceProfiles={selectedProfiles.length > 0}
           />
           
           {generatedPost && (
@@ -226,7 +248,10 @@ const PostGenerator = ({ isHomeScreen = false, isDashboard = false }: PostGenera
         </TabsContent>
         
         <TabsContent value="reference" className="space-y-6">
-          <LinkedInProfileManager />
+          <LinkedInProfileManager 
+            onSelectProfile={handleSelectProfile}
+            selectedProfiles={selectedProfiles}
+          />
         </TabsContent>
         
         <TabsContent value="drafts" className="space-y-6">
@@ -245,3 +270,4 @@ const PostGenerator = ({ isHomeScreen = false, isDashboard = false }: PostGenera
 };
 
 export default PostGenerator;
+

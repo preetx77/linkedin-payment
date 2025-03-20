@@ -5,14 +5,24 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, RefreshCw, PlusCircle, Trash2 } from 'lucide-react';
+import { Loader2, RefreshCw, PlusCircle, Trash2, Check } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
-const ProfileList = ({ profiles, onRefresh, isFetching }: { 
-  profiles: LinkedInProfile[], 
-  onRefresh: () => void,
-  isFetching: boolean
-}) => {
+interface ProfileListProps {
+  profiles: LinkedInProfile[];
+  onRefresh: () => void;
+  isFetching: boolean;
+  onSelectProfile?: (profile: LinkedInProfile) => void;
+  selectedProfiles?: LinkedInProfile[];
+}
+
+const ProfileList = ({ 
+  profiles, 
+  onRefresh, 
+  isFetching,
+  onSelectProfile,
+  selectedProfiles = []
+}: ProfileListProps) => {
   if (profiles.length === 0) {
     return (
       <div className="border border-dashed rounded-lg p-6 text-center">
@@ -23,10 +33,17 @@ const ProfileList = ({ profiles, onRefresh, isFetching }: {
     );
   }
 
+  const isSelected = (profile: LinkedInProfile) => {
+    return selectedProfiles.some(p => p.id === profile.id);
+  };
+
   return (
     <div className="grid gap-3">
       {profiles.map((profile) => (
-        <Card key={profile.id} className="bg-card/50">
+        <Card 
+          key={profile.id} 
+          className={`bg-card/50 ${isSelected(profile) ? 'border-linkedin' : ''}`}
+        >
           <CardHeader className="p-4 pb-2">
             <CardTitle className="text-base font-medium">
               {profile.username}
@@ -41,7 +58,24 @@ const ProfileList = ({ profiles, onRefresh, isFetching }: {
               <p>Last scraped: {new Date(profile.last_scraped).toLocaleDateString()}</p>
             </div>
           </CardContent>
-          <CardFooter className="p-2 flex justify-end">
+          <CardFooter className="p-2 flex justify-between">
+            {onSelectProfile && (
+              <Button 
+                variant={isSelected(profile) ? "default" : "outline"} 
+                size="sm" 
+                className={`h-8 px-2 text-xs ${isSelected(profile) ? 'bg-linkedin hover:bg-linkedin-dark' : ''}`}
+                onClick={() => onSelectProfile(profile)}
+              >
+                {isSelected(profile) ? (
+                  <>
+                    <Check className="h-3 w-3 mr-1" />
+                    Selected
+                  </>
+                ) : (
+                  "Use as Reference"
+                )}
+              </Button>
+            )}
             <Button variant="ghost" size="sm" className="h-8 px-2 text-xs text-muted-foreground hover:text-destructive">
               <Trash2 className="h-3 w-3 mr-1" />
               Remove
@@ -53,7 +87,12 @@ const ProfileList = ({ profiles, onRefresh, isFetching }: {
   );
 };
 
-const LinkedInProfileManager = () => {
+interface LinkedInProfileManagerProps {
+  onSelectProfile?: (profile: LinkedInProfile) => void;
+  selectedProfiles?: LinkedInProfile[];
+}
+
+const LinkedInProfileManager = ({ onSelectProfile, selectedProfiles = [] }: LinkedInProfileManagerProps) => {
   const { toast } = useToast();
   const { user } = useAuth();
   const [profileUrl, setProfileUrl] = useState('');
@@ -196,6 +235,8 @@ const LinkedInProfileManager = () => {
           profiles={profiles} 
           onRefresh={fetchProfiles}
           isFetching={isFetching}
+          onSelectProfile={onSelectProfile}
+          selectedProfiles={selectedProfiles}
         />
       </div>
     </div>
