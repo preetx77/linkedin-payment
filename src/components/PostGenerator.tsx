@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
@@ -8,66 +8,59 @@ import {
   Copy, 
   RefreshCw, 
   Sparkles, 
+  User, 
   Edit,
   Save,
   BookmarkIcon,
   Trash,
-  LogIn,
-  Loader2
+  LogIn
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import LoadingSpinner from './LoadingSpinner';
 import { useAuth } from '@/contexts/AuthContext';
 import { Link } from 'react-router-dom';
-import LinkedInProfileManager from './LinkedInProfileManager';
-import { LinkedInProfile, LinkedInService, GeneratedPost } from '@/utils/LinkedInService';
 
 const MAX_LINKEDIN_CHARS = 3000;
 
 interface PostGeneratorProps {
   isHomeScreen?: boolean;
-  isDashboard?: boolean;
 }
 
-const PostGenerator = ({ isHomeScreen = false, isDashboard = false }: PostGeneratorProps) => {
+const PostGenerator = ({ isHomeScreen = false }: PostGeneratorProps) => {
   const { toast } = useToast();
   const { user } = useAuth();
   const [postIdea, setPostIdea] = useState('');
+  const [referenceCreator, setReferenceCreator] = useState('');
+  const [referenceCreators, setReferenceCreators] = useState<string[]>([]);
   const [generatedPost, setGeneratedPost] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [charCount, setCharCount] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
-  const [savedDrafts, setSavedDrafts] = useState<GeneratedPost[]>([]);
+  const [savedDrafts, setSavedDrafts] = useState<{id: string, content: string, date: string}[]>([]);
   const [activeTab, setActiveTab] = useState('generate');
-  const [selectedProfiles, setSelectedProfiles] = useState<LinkedInProfile[]>([]);
-  const [isLoadingDrafts, setIsLoadingDrafts] = useState(false);
   
-  useEffect(() => {
-    if (user && activeTab === 'drafts') {
-      fetchSavedDrafts();
-    }
-  }, [user, activeTab]);
-
-  const fetchSavedDrafts = async () => {
-    if (!user) return;
-    
-    setIsLoadingDrafts(true);
-    try {
-      const posts = await LinkedInService.getSavedPosts();
-      setSavedDrafts(posts);
-    } catch (error) {
-      console.error('Error fetching drafts:', error);
+  const handleAddCreator = () => {
+    if (referenceCreator && !referenceCreators.includes(referenceCreator)) {
+      setReferenceCreators([...referenceCreators, referenceCreator]);
+      setReferenceCreator('');
+      
       toast({
-        title: "Error",
-        description: "Failed to load saved drafts",
-        variant: "destructive"
+        title: "Reference added",
+        description: `${referenceCreator} added as a reference account.`,
       });
-    } finally {
-      setIsLoadingDrafts(false);
     }
   };
   
-  const handleGeneratePost = async () => {
+  const handleRemoveCreator = (creator: string) => {
+    setReferenceCreators(referenceCreators.filter(c => c !== creator));
+    
+    toast({
+      title: "Reference removed",
+      description: `${creator} removed from reference accounts.`,
+    });
+  };
+  
+  const handleGeneratePost = () => {
     if (!postIdea) {
       toast({
         title: "Input required",
@@ -89,34 +82,24 @@ const PostGenerator = ({ isHomeScreen = false, isDashboard = false }: PostGenera
     
     setIsGenerating(true);
     
-    try {
-      const result = await LinkedInService.generatePost(postIdea, selectedProfiles);
-      
-      if (result.success && result.post) {
-        setGeneratedPost(result.post);
-        setCharCount(result.post.length);
-        
-        toast({
-          title: "Post generated",
-          description: "Your LinkedIn post has been created successfully.",
-        });
-      } else {
-        toast({
-          title: "Generation failed",
-          description: result.error || "Failed to generate post content.",
-          variant: "destructive"
-        });
+    // Simulate post generation - in a real app, this would be an API call
+    setTimeout(() => {
+      let referencesText = '';
+      if (referenceCreators.length > 0) {
+        referencesText = `\n\nThis post is inspired by the writing styles of ${referenceCreators.join(', ')}.`;
       }
-    } catch (error) {
-      console.error('Error generating post:', error);
-      toast({
-        title: "Error",
-        description: "An error occurred while generating your post.",
-        variant: "destructive"
-      });
-    } finally {
+      
+      const simulatedPost = `🚀 Excited to share some insights on ${postIdea}!\n\nOver the past few weeks, I've been exploring this topic in depth and found some fascinating patterns that could revolutionize how we approach this challenge.\n\nKey takeaways:\n\n1️⃣ Start with a clear understanding of your audience\n2️⃣ Focus on delivering tangible value in every interaction\n3️⃣ Consistency beats perfection every time\n\nWhat strategies have worked for you? Let me know in the comments below!${referencesText}\n\n#ProfessionalDevelopment #CareerGrowth #LinkedIn`;
+      
+      setGeneratedPost(simulatedPost);
+      setCharCount(simulatedPost.length);
       setIsGenerating(false);
-    }
+      
+      toast({
+        title: "Post generated",
+        description: "Your LinkedIn post has been created successfully.",
+      });
+    }, 2000);
   };
   
   const handleCopyPost = () => {
@@ -132,7 +115,7 @@ const PostGenerator = ({ isHomeScreen = false, isDashboard = false }: PostGenera
     setCharCount(e.target.value.length);
   };
   
-  const handleSaveDraft = async () => {
+  const handleSaveDraft = () => {
     if (!generatedPost) {
       toast({
         title: "No content",
@@ -152,40 +135,23 @@ const PostGenerator = ({ isHomeScreen = false, isDashboard = false }: PostGenera
       return;
     }
     
-    try {
-      const result = await LinkedInService.savePost(generatedPost, postIdea, selectedProfiles);
-      
-      if (result.success) {
-        toast({
-          title: "Draft saved",
-          description: "Your post has been saved as a draft.",
-        });
-        
-        // Refresh drafts if on drafts tab
-        if (activeTab === 'drafts') {
-          fetchSavedDrafts();
-        }
-      } else {
-        toast({
-          title: "Save failed",
-          description: result.error || "Failed to save draft.",
-          variant: "destructive"
-        });
-      }
-    } catch (error) {
-      console.error('Error saving draft:', error);
-      toast({
-        title: "Error",
-        description: "An error occurred while saving your draft.",
-        variant: "destructive"
-      });
-    }
+    const newDraft = {
+      id: Date.now().toString(),
+      content: generatedPost,
+      date: new Date().toLocaleDateString()
+    };
+    
+    setSavedDrafts([...savedDrafts, newDraft]);
+    
+    toast({
+      title: "Draft saved",
+      description: "Your post has been saved as a draft.",
+    });
   };
   
-  const handleLoadDraft = (draft: GeneratedPost) => {
-    setGeneratedPost(draft.content);
-    setCharCount(draft.content.length);
-    setPostIdea(draft.prompt);
+  const handleLoadDraft = (draftContent: string) => {
+    setGeneratedPost(draftContent);
+    setCharCount(draftContent.length);
     setActiveTab('generate');
     
     toast({
@@ -194,32 +160,13 @@ const PostGenerator = ({ isHomeScreen = false, isDashboard = false }: PostGenera
     });
   };
   
-  const handleDeleteDraft = async (draftId: string) => {
-    try {
-      const result = await LinkedInService.deletePost(draftId);
-      
-      if (result.success) {
-        setSavedDrafts(savedDrafts.filter(draft => draft.id !== draftId));
-        
-        toast({
-          title: "Draft deleted",
-          description: "Your draft has been removed.",
-        });
-      } else {
-        toast({
-          title: "Delete failed",
-          description: result.error || "Failed to delete draft.",
-          variant: "destructive"
-        });
-      }
-    } catch (error) {
-      console.error('Error deleting draft:', error);
-      toast({
-        title: "Error",
-        description: "An error occurred while deleting your draft.",
-        variant: "destructive"
-      });
-    }
+  const handleDeleteDraft = (draftId: string) => {
+    setSavedDrafts(savedDrafts.filter(draft => draft.id !== draftId));
+    
+    toast({
+      title: "Draft deleted",
+      description: "Your draft has been removed.",
+    });
   };
   
   const renderAuthButtons = () => (
@@ -239,19 +186,13 @@ const PostGenerator = ({ isHomeScreen = false, isDashboard = false }: PostGenera
     </div>
   );
   
-  const cardClasses = () => {
-    if (isDashboard) return 'glass-card rounded-xl p-6 md:p-8 animate-fade-in shadow-lg';
-    if (isHomeScreen) return 'glass-card rounded-xl p-6 md:p-8 animate-fade-in shadow-lg bg-background/95';
-    return 'glass-card rounded-xl p-6 md:p-8 animate-fade-in shadow-lg';
-  };
-  
   return (
-    <div className={cardClasses()}>
+    <div className={`glass-card rounded-xl p-6 md:p-8 animate-fade-in shadow-lg ${isHomeScreen ? 'bg-background/95' : ''}`}>
       <Tabs defaultValue="generate" className="w-full" onValueChange={setActiveTab}>
         <TabsList className="grid grid-cols-3 mb-6">
           <TabsTrigger value="generate">Generate Post</TabsTrigger>
-          <TabsTrigger value="reference">Reference Profiles</TabsTrigger>
-          <TabsTrigger value="drafts">Saved Drafts</TabsTrigger>
+          <TabsTrigger value="settings">Settings</TabsTrigger>
+          <TabsTrigger value="drafts">Saved Drafts ({savedDrafts.length})</TabsTrigger>
         </TabsList>
         
         <TabsContent value="generate" className="space-y-6">
@@ -265,6 +206,48 @@ const PostGenerator = ({ isHomeScreen = false, isDashboard = false }: PostGenera
               onChange={(e) => setPostIdea(e.target.value)}
               className="resize-none min-h-[120px]"
             />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium mb-2">
+              Reference LinkedIn Creators (Optional)
+            </label>
+            <div className="flex gap-2 mb-3">
+              <Input
+                placeholder="Add LinkedIn creator's name"
+                value={referenceCreator}
+                onChange={(e) => setReferenceCreator(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && referenceCreator) {
+                    e.preventDefault();
+                    handleAddCreator();
+                  }
+                }}
+              />
+              <Button variant="outline" onClick={handleAddCreator}>
+                Add
+              </Button>
+            </div>
+            
+            {referenceCreators.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-4">
+                {referenceCreators.map((creator, index) => (
+                  <div 
+                    key={index} 
+                    className="bg-secondary text-secondary-foreground px-3 py-1 rounded-full text-sm flex items-center gap-2"
+                  >
+                    <User size={14} />
+                    <span>{creator}</span>
+                    <button 
+                      className="text-muted-foreground hover:text-foreground"
+                      onClick={() => handleRemoveCreator(creator)}
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
           
           <div className="flex justify-center">
@@ -284,7 +267,7 @@ const PostGenerator = ({ isHomeScreen = false, isDashboard = false }: PostGenera
                 ) : (
                   <>
                     <Sparkles size={16} />
-                    <span>Generate LinkedIn Post</span>
+                    <span>Generate Post</span>
                   </>
                 )}
               </Button>
@@ -355,31 +338,45 @@ const PostGenerator = ({ isHomeScreen = false, isDashboard = false }: PostGenera
           )}
         </TabsContent>
         
-        <TabsContent value="reference" className="space-y-6">
-          <LinkedInProfileManager />
+        <TabsContent value="settings" className="space-y-6">
+          <div>
+            <label className="block text-sm font-medium mb-2">
+              Writing Style Training
+            </label>
+            <div className="border border-border rounded-lg p-6 text-center">
+              <p className="text-muted-foreground mb-4">
+                Train the AI on your writing style by uploading previous LinkedIn posts
+              </p>
+              <Button variant="outline" className="gap-2">
+                <User size={16} />
+                <span>Train on My Style</span>
+              </Button>
+            </div>
+          </div>
+
+          {!user && isHomeScreen && (
+            <div className="mt-6">
+              {renderAuthButtons()}
+            </div>
+          )}
         </TabsContent>
         
         <TabsContent value="drafts" className="space-y-6">
           {!user && isHomeScreen ? (
             renderAuthButtons()
-          ) : isLoadingDrafts ? (
-            <div className="flex justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-            </div>
           ) : savedDrafts.length > 0 ? (
             <div className="grid gap-4">
               {savedDrafts.map((draft) => (
                 <div key={draft.id} className="border border-border rounded-lg p-4 bg-background">
                   <div className="flex justify-between items-start mb-2">
                     <div className="text-sm text-muted-foreground">
-                      Saved on {new Date(draft.created_at).toLocaleDateString()}
+                      Saved on {draft.date}
                     </div>
                     <div className="flex gap-2">
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => handleLoadDraft(draft)}
-                        title="Load draft"
+                        onClick={() => handleLoadDraft(draft.content)}
                       >
                         <BookmarkIcon size={14} />
                         <span className="sr-only">Load draft</span>
@@ -388,15 +385,11 @@ const PostGenerator = ({ isHomeScreen = false, isDashboard = false }: PostGenera
                         variant="ghost"
                         size="sm"
                         onClick={() => handleDeleteDraft(draft.id)}
-                        title="Delete draft"
                       >
                         <Trash size={14} />
                         <span className="sr-only">Delete draft</span>
                       </Button>
                     </div>
-                  </div>
-                  <div className="text-sm">
-                    <p className="font-medium mb-1 truncate">{draft.prompt}</p>
                   </div>
                   <div className="text-sm line-clamp-3 whitespace-pre-wrap">
                     {draft.content}

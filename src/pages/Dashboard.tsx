@@ -14,14 +14,15 @@ const Dashboard = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       
-      <main className="container mx-auto px-4 py-20 md:py-24">
+      <main className="container mx-auto px-4 py-32">
         <div className="max-w-6xl mx-auto">
-          <div className="mb-8">
+          <div className="mb-10">
             <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
             <p className="text-muted-foreground">Create and manage your LinkedIn posts</p>
           </div>
           
           <div className="grid grid-cols-12 gap-6">
+            {/* Sidebar */}
             <div className="col-span-12 lg:col-span-3">
               <Card className="glass-card">
                 <CardHeader className="pb-3">
@@ -109,10 +110,13 @@ const Dashboard = () => {
               </Card>
             </div>
             
+            {/* Main Content */}
             <div className="col-span-12 lg:col-span-9">
-              <PostGenerator isDashboard={true} />
-              
-              <Tabs defaultValue="analytics" value={activeTab === 'generate' ? 'analytics' : activeTab} onValueChange={setActiveTab} className="mt-6">
+              <Tabs defaultValue="generate" value={activeTab} onValueChange={setActiveTab}>
+                <TabsContent value="generate" className="mt-0">
+                  <PostGenerator />
+                </TabsContent>
+                
                 <TabsContent value="analytics" className="mt-0">
                   <Card className="glass-card">
                     <CardHeader>
