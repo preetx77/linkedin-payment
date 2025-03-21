@@ -9,60 +9,6 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      generated_posts: {
-        Row: {
-          content: string
-          created_at: string | null
-          id: string
-          prompt: string
-          reference_profiles: Json | null
-          user_id: string
-        }
-        Insert: {
-          content: string
-          created_at?: string | null
-          id?: string
-          prompt: string
-          reference_profiles?: Json | null
-          user_id: string
-        }
-        Update: {
-          content?: string
-          created_at?: string | null
-          id?: string
-          prompt?: string
-          reference_profiles?: Json | null
-          user_id?: string
-        }
-        Relationships: []
-      }
-      linkedin_profiles: {
-        Row: {
-          id: string
-          last_scraped: string | null
-          posts_count: number | null
-          profile_url: string
-          user_id: string
-          username: string
-        }
-        Insert: {
-          id?: string
-          last_scraped?: string | null
-          posts_count?: number | null
-          profile_url: string
-          user_id: string
-          username: string
-        }
-        Update: {
-          id?: string
-          last_scraped?: string | null
-          posts_count?: number | null
-          profile_url?: string
-          user_id?: string
-          username?: string
-        }
-        Relationships: []
-      }
       subscriptions: {
         Row: {
           amount: number | null

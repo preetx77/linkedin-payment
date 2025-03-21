@@ -5,94 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, RefreshCw, PlusCircle, Trash2, Check } from 'lucide-react';
+import { Loader2, RefreshCw, PlusCircle, Trash2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
-interface ProfileListProps {
-  profiles: LinkedInProfile[];
-  onRefresh: () => void;
-  isFetching: boolean;
-  onSelectProfile?: (profile: LinkedInProfile) => void;
-  selectedProfiles?: LinkedInProfile[];
-}
-
-const ProfileList = ({ 
-  profiles, 
-  onRefresh, 
-  isFetching,
-  onSelectProfile,
-  selectedProfiles = []
-}: ProfileListProps) => {
-  if (profiles.length === 0) {
-    return (
-      <div className="border border-dashed rounded-lg p-6 text-center">
-        <p className="text-muted-foreground text-sm">
-          {isFetching ? 'Loading profiles...' : 'No reference profiles added yet'}
-        </p>
-      </div>
-    );
-  }
-
-  const isSelected = (profile: LinkedInProfile) => {
-    return selectedProfiles.some(p => p.id === profile.id);
-  };
-
-  return (
-    <div className="grid gap-3">
-      {profiles.map((profile) => (
-        <Card 
-          key={profile.id} 
-          className={`bg-card/50 ${isSelected(profile) ? 'border-linkedin' : ''}`}
-        >
-          <CardHeader className="p-4 pb-2">
-            <CardTitle className="text-base font-medium">
-              {profile.username}
-            </CardTitle>
-            <CardDescription className="text-xs truncate">
-              {profile.profile_url}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="p-4 pt-0 pb-2">
-            <div className="text-xs text-muted-foreground">
-              <p>Posts analyzed: {profile.posts_count}</p>
-              <p>Last scraped: {new Date(profile.last_scraped).toLocaleDateString()}</p>
-            </div>
-          </CardContent>
-          <CardFooter className="p-2 flex justify-between">
-            {onSelectProfile && (
-              <Button 
-                variant={isSelected(profile) ? "default" : "outline"} 
-                size="sm" 
-                className={`h-8 px-2 text-xs ${isSelected(profile) ? 'bg-linkedin hover:bg-linkedin-dark' : ''}`}
-                onClick={() => onSelectProfile(profile)}
-              >
-                {isSelected(profile) ? (
-                  <>
-                    <Check className="h-3 w-3 mr-1" />
-                    Selected
-                  </>
-                ) : (
-                  "Use as Reference"
-                )}
-              </Button>
-            )}
-            <Button variant="ghost" size="sm" className="h-8 px-2 text-xs text-muted-foreground hover:text-destructive">
-              <Trash2 className="h-3 w-3 mr-1" />
-              Remove
-            </Button>
-          </CardFooter>
-        </Card>
-      ))}
-    </div>
-  );
-};
-
-interface LinkedInProfileManagerProps {
-  onSelectProfile?: (profile: LinkedInProfile) => void;
-  selectedProfiles?: LinkedInProfile[];
-}
-
-const LinkedInProfileManager = ({ onSelectProfile, selectedProfiles = [] }: LinkedInProfileManagerProps) => {
+const LinkedInProfileManager = () => {
   const { toast } = useToast();
   const { user } = useAuth();
   const [profileUrl, setProfileUrl] = useState('');
@@ -231,13 +147,40 @@ const LinkedInProfileManager = ({ onSelectProfile, selectedProfiles = [] }: Link
           </Button>
         </div>
         
-        <ProfileList 
-          profiles={profiles} 
-          onRefresh={fetchProfiles}
-          isFetching={isFetching}
-          onSelectProfile={onSelectProfile}
-          selectedProfiles={selectedProfiles}
-        />
+        {profiles.length > 0 ? (
+          <div className="grid gap-3">
+            {profiles.map((profile) => (
+              <Card key={profile.id} className="bg-card/50">
+                <CardHeader className="p-4 pb-2">
+                  <CardTitle className="text-base font-medium">
+                    {profile.username}
+                  </CardTitle>
+                  <CardDescription className="text-xs truncate">
+                    {profile.profile_url}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="p-4 pt-0 pb-2">
+                  <div className="text-xs text-muted-foreground">
+                    <p>Posts analyzed: {profile.posts_count}</p>
+                    <p>Last scraped: {new Date(profile.last_scraped).toLocaleDateString()}</p>
+                  </div>
+                </CardContent>
+                <CardFooter className="p-2 flex justify-end">
+                  <Button variant="ghost" size="sm" className="h-8 px-2 text-xs text-muted-foreground hover:text-destructive">
+                    <Trash2 className="h-3 w-3 mr-1" />
+                    Remove
+                  </Button>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <div className="border border-dashed rounded-lg p-6 text-center">
+            <p className="text-muted-foreground text-sm">
+              {isFetching ? 'Loading profiles...' : 'No reference profiles added yet'}
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

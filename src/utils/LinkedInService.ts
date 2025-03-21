@@ -1,6 +1,6 @@
+
 import { supabase } from '@/integrations/supabase/client';
-import { toast } from '@/components/ui/use-toast';
-import { Json } from '@/integrations/supabase/types';
+import { toast } from '@/hooks/use-toast';
 
 export interface LinkedInProfile {
   id: string;
@@ -15,7 +15,7 @@ export interface GeneratedPost {
   content: string;
   prompt: string;
   created_at: string;
-  reference_profiles?: Json; // Changed from string to Json to match the database type
+  reference_profiles?: string;
 }
 
 export const LinkedInService = {
@@ -28,37 +28,19 @@ export const LinkedInService = {
       }
 
       // Call the scrape-linkedin edge function
-      const response = await supabase.functions.invoke('scrape-linkedin', {
+      const { data, error } = await supabase.functions.invoke('scrape-linkedin', {
         body: { profileUrl },
       });
 
-      if (response.error) {
-        console.error('Error scraping LinkedIn profile:', response.error);
-        return { 
-          success: false, 
-          error: response.error.message || 'Failed to scrape profile' 
-        };
+      if (error) {
+        console.error('Error scraping LinkedIn profile:', error);
+        return { success: false, error: error.message || 'Failed to scrape profile' };
       }
 
-      // Check for application-level errors returned with a 200 status
-      if (response.data && response.data.error) {
-        console.error('Application error:', response.data.error);
-        return { 
-          success: false, 
-          error: response.data.error 
-        };
-      }
-
-      return { 
-        success: true, 
-        profile: response.data.profile 
-      };
+      return { success: true, profile: data.profile };
     } catch (error) {
       console.error('Error in scrapeProfile:', error);
-      return { 
-        success: false, 
-        error: error instanceof Error ? error.message : 'An unknown error occurred' 
-      };
+      return { success: false, error: error instanceof Error ? error.message : 'An unknown error occurred' };
     }
   },
 
@@ -72,7 +54,7 @@ export const LinkedInService = {
       if (error) {
         console.error('Error fetching LinkedIn profiles:', error);
         toast({
-          title: "Error",
+          title: 'Error',
           description: 'Failed to fetch LinkedIn profiles',
           variant: 'destructive',
         });
@@ -95,38 +77,23 @@ export const LinkedInService = {
       }
 
       // Call the generate-post edge function
-      const response = await supabase.functions.invoke('generate-post', {
+      const { data, error } = await supabase.functions.invoke('generate-post', {
         body: { prompt, referenceProfiles },
       });
 
-      if (response.error) {
-        console.error('Error generating LinkedIn post:', response.error);
-        return { 
-          success: false, 
-          error: response.error.message || 'Failed to generate post' 
-        };
-      }
-
-      // Check for application-level errors returned with a 200 status
-      if (response.data && response.data.error) {
-        console.error('Application error:', response.data.error);
-        return { 
-          success: false, 
-          error: response.data.error 
-        };
+      if (error) {
+        console.error('Error generating LinkedIn post:', error);
+        return { success: false, error: error.message || 'Failed to generate post' };
       }
 
       return { 
         success: true, 
-        post: response.data.post,
-        postId: response.data.postId
+        post: data.post,
+        postId: data.postId
       };
     } catch (error) {
       console.error('Error in generatePost:', error);
-      return { 
-        success: false, 
-        error: error instanceof Error ? error.message : 'An unknown error occurred' 
-      };
+      return { success: false, error: error instanceof Error ? error.message : 'An unknown error occurred' };
     }
   },
 
@@ -156,22 +123,12 @@ export const LinkedInService = {
 
   async savePost(content: string, prompt: string, referenceProfiles: LinkedInProfile[] = []): Promise<{ success: boolean; postId?: string; error?: string }> {
     try {
-      // Get current user session
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        return { success: false, error: 'Authentication required' };
-      }
-
-      // Convert referenceProfiles array to JSON if needed
-      const refProfiles = referenceProfiles.length > 0 ? JSON.stringify(referenceProfiles) : null;
-
       const { data, error } = await supabase
         .from('generated_posts')
         .insert({
           content,
           prompt,
-          reference_profiles: refProfiles,
-          user_id: session.user.id, // Adding the user_id which was missing
+          reference_profiles: referenceProfiles.length > 0 ? JSON.stringify(referenceProfiles) : null,
         })
         .select('id')
         .single();
