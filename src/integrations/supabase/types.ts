@@ -6,169 +6,113 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
-export type Database = {
+export interface Database {
   public: {
     Tables: {
-      subscriptions: {
+      posts: {
         Row: {
-          amount: number | null
-          cancel_at_period_end: boolean | null
-          canceled_at: number | null
-          created_at: string
-          currency: string | null
-          current_period_end: number | null
-          current_period_start: number | null
-          custom_field_data: Json | null
-          customer_cancellation_comment: string | null
-          customer_cancellation_reason: string | null
-          customer_id: string | null
-          ended_at: number | null
-          ends_at: number | null
           id: string
-          interval: string | null
-          metadata: Json | null
-          price_id: string | null
-          started_at: number | null
-          status: string | null
-          stripe_id: string | null
-          stripe_price_id: string | null
-          updated_at: string
-          user_id: string | null
+          created_at: string
+          user_id: string
+          content: string
+          status: 'draft' | 'published'
+          reference_creators: string[] | null
+          post_idea: string
+          linkedin_post_id: string | null
+          analytics: Json | null
+          scheduled_for: string | null
         }
         Insert: {
-          amount?: number | null
-          cancel_at_period_end?: boolean | null
-          canceled_at?: number | null
-          created_at?: string
-          currency?: string | null
-          current_period_end?: number | null
-          current_period_start?: number | null
-          custom_field_data?: Json | null
-          customer_cancellation_comment?: string | null
-          customer_cancellation_reason?: string | null
-          customer_id?: string | null
-          ended_at?: number | null
-          ends_at?: number | null
           id?: string
-          interval?: string | null
-          metadata?: Json | null
-          price_id?: string | null
-          started_at?: number | null
-          status?: string | null
-          stripe_id?: string | null
-          stripe_price_id?: string | null
-          updated_at?: string
-          user_id?: string | null
+          created_at?: string
+          user_id: string
+          content: string
+          status?: 'draft' | 'published'
+          reference_creators?: string[] | null
+          post_idea: string
+          linkedin_post_id?: string | null
+          analytics?: Json | null
+          scheduled_for?: string | null
         }
         Update: {
-          amount?: number | null
-          cancel_at_period_end?: boolean | null
-          canceled_at?: number | null
-          created_at?: string
-          currency?: string | null
-          current_period_end?: number | null
-          current_period_start?: number | null
-          custom_field_data?: Json | null
-          customer_cancellation_comment?: string | null
-          customer_cancellation_reason?: string | null
-          customer_id?: string | null
-          ended_at?: number | null
-          ends_at?: number | null
           id?: string
-          interval?: string | null
-          metadata?: Json | null
-          price_id?: string | null
-          started_at?: number | null
-          status?: string | null
-          stripe_id?: string | null
-          stripe_price_id?: string | null
-          updated_at?: string
-          user_id?: string | null
+          created_at?: string
+          user_id?: string
+          content?: string
+          status?: 'draft' | 'published'
+          reference_creators?: string[] | null
+          post_idea?: string
+          linkedin_post_id?: string | null
+          analytics?: Json | null
+          scheduled_for?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "subscriptions_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["user_id"]
-          },
-        ]
       }
-      users: {
+      user_settings: {
         Row: {
-          avatar_url: string | null
-          created_at: string
-          credits: string | null
-          email: string | null
-          full_name: string | null
           id: string
-          image: string | null
-          name: string | null
-          subscription: string | null
-          token_identifier: string
-          updated_at: string | null
-          user_id: string | null
+          user_id: string
+          created_at: string
+          linkedin_token: string | null
+          email_notifications: boolean
+          default_post_style: string | null
+          favorite_creators: string[] | null
+          theme: 'light' | 'dark'
         }
         Insert: {
-          avatar_url?: string | null
+          id?: string
+          user_id: string
           created_at?: string
-          credits?: string | null
-          email?: string | null
-          full_name?: string | null
-          id: string
-          image?: string | null
-          name?: string | null
-          subscription?: string | null
-          token_identifier: string
-          updated_at?: string | null
-          user_id?: string | null
+          linkedin_token?: string | null
+          email_notifications?: boolean
+          default_post_style?: string | null
+          favorite_creators?: string[] | null
+          theme?: 'light' | 'dark'
         }
         Update: {
-          avatar_url?: string | null
-          created_at?: string
-          credits?: string | null
-          email?: string | null
-          full_name?: string | null
           id?: string
-          image?: string | null
-          name?: string | null
-          subscription?: string | null
-          token_identifier?: string
-          updated_at?: string | null
-          user_id?: string | null
+          user_id?: string
+          created_at?: string
+          linkedin_token?: string | null
+          email_notifications?: boolean
+          default_post_style?: string | null
+          favorite_creators?: string[] | null
+          theme?: 'light' | 'dark'
         }
-        Relationships: []
       }
-      webhook_events: {
+      analytics: {
         Row: {
-          created_at: string
-          data: Json | null
-          event_type: string
           id: string
-          modified_at: string
-          stripe_event_id: string | null
-          type: string
+          post_id: string
+          created_at: string
+          views: number
+          likes: number
+          comments: number
+          shares: number
+          click_through_rate: number
+          engagement_rate: number
         }
         Insert: {
-          created_at?: string
-          data?: Json | null
-          event_type: string
           id?: string
-          modified_at?: string
-          stripe_event_id?: string | null
-          type: string
+          post_id: string
+          created_at?: string
+          views?: number
+          likes?: number
+          comments?: number
+          shares?: number
+          click_through_rate?: number
+          engagement_rate?: number
         }
         Update: {
-          created_at?: string
-          data?: Json | null
-          event_type?: string
           id?: string
-          modified_at?: string
-          stripe_event_id?: string | null
-          type?: string
+          post_id?: string
+          created_at?: string
+          views?: number
+          likes?: number
+          comments?: number
+          shares?: number
+          click_through_rate?: number
+          engagement_rate?: number
         }
-        Relationships: []
       }
     }
     Views: {
@@ -178,9 +122,6 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
       [_ in never]: never
     }
   }
@@ -282,3 +223,37 @@ export type CompositeTypes<
   : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
     ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
+
+export interface PostMetrics {
+  id: string;
+  post_id: string;
+  user_id: string;
+  views: number;
+  likes: number;
+  comments: number;
+  shares: number;
+  clicks: number;
+  engagement_rate: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PostEngagement {
+  id: string;
+  post_id: string;
+  user_id: string;
+  engagement_type: 'like' | 'comment' | 'share' | 'click';
+  created_at: string;
+}
+
+export interface PostLearningData {
+  id: string;
+  user_id: string;
+  post_id: string;
+  content: string;
+  topic: string;
+  tone: string;
+  success_score: number;
+  engagement_metrics: PostMetrics;
+  created_at: string;
+}

@@ -1,4 +1,3 @@
-
 import { Link } from 'react-router-dom';
 
 const Footer = () => {
@@ -29,18 +28,18 @@ const Footer = () => {
           <div>
             <h3 className="font-semibold mb-4">Company</h3>
             <ul className="space-y-3">
-              <li><Link to="#" className="text-muted-foreground hover:text-foreground transition-colors text-sm">About Us</Link></li>
-              <li><Link to="#" className="text-muted-foreground hover:text-foreground transition-colors text-sm">Careers</Link></li>
-              <li><Link to="#" className="text-muted-foreground hover:text-foreground transition-colors text-sm">Contact</Link></li>
+              <li><Link to="/about" className="text-muted-foreground hover:text-foreground transition-colors text-sm">About Us</Link></li>
+              <li><Link to="/careers" className="text-muted-foreground hover:text-foreground transition-colors text-sm">Careers</Link></li>
+              <li><Link to="/contact" className="text-muted-foreground hover:text-foreground transition-colors text-sm">Contact</Link></li>
             </ul>
           </div>
           
           <div>
             <h3 className="font-semibold mb-4">Legal</h3>
             <ul className="space-y-3">
-              <li><Link to="#" className="text-muted-foreground hover:text-foreground transition-colors text-sm">Terms of Service</Link></li>
-              <li><Link to="#" className="text-muted-foreground hover:text-foreground transition-colors text-sm">Privacy Policy</Link></li>
-              <li><Link to="#" className="text-muted-foreground hover:text-foreground transition-colors text-sm">Cookie Policy</Link></li>
+              <li><Link to="/terms" className="text-muted-foreground hover:text-foreground transition-colors text-sm">Terms of Service</Link></li>
+              <li><Link to="/privacy" className="text-muted-foreground hover:text-foreground transition-colors text-sm">Privacy Policy</Link></li>
+              <li><Link to="/cookies" className="text-muted-foreground hover:text-foreground transition-colors text-sm">Cookie Policy</Link></li>
             </ul>
           </div>
         </div>
