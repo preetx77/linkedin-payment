@@ -18,18 +18,23 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  optimizeDeps: {
+    include: ['react', 'react-dom', '@radix-ui/react-icons'],
+  },
   build: {
     sourcemap: true,
+    commonjsOptions: {
+      include: [/@radix-ui\/react-icons/, /node_modules/]
+    },
     rollupOptions: {
+      external: [],
       output: {
         manualChunks: {
           'react-vendor': ['react', 'react-dom'],
           'ui-vendor': ['@radix-ui/react-icons', '@radix-ui/react-slot'],
+          'radix-icons': ['@radix-ui/react-icons']
         },
       },
     },
-  },
-  optimizeDeps: {
-    include: ['react', 'react-dom'],
   },
 }));
