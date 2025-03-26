@@ -9,7 +9,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-1">
             <Link to="/" className="flex items-center mb-4">
-              <span className="text-xl text-gradient font-bold text-center">LinkGen</span>
+              <span className="text-xl text-gradient font-bold text-center">LinkGenn</span>
             </Link>
             <p className="text-muted-foreground text-sm">
               AI-powered LinkedIn post generator helping professionals create engaging content.
@@ -46,7 +46,7 @@ const Footer = () => {
         
         <div className="border-t border-border mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-muted-foreground text-sm">
-            © {currentYear} LinkGen. All rights reserved.
+            © {currentYear} LinkGenn. All rights reserved.
           </p>
           <div className="mt-4 md:mt-0 flex items-center space-x-4">
             <Link to="#" className="text-muted-foreground hover:text-foreground transition-colors">

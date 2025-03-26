@@ -48,7 +48,7 @@ const Contact = () => {
             <div>
               <h2 className="text-2xl font-semibold mb-4">Get in Touch</h2>
               <p className="text-muted-foreground mb-8">
-                Have questions about LinkGen? We're here to help. Fill out the form and we'll get back to you as soon as possible.
+                Have questions about LinkGenn? We're here to help. Fill out the form and we'll get back to you as soon as possible.
               </p>
               
               <div className="space-y-6">

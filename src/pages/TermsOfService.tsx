@@ -18,14 +18,14 @@ const TermsOfService = () => {
             <section className="mb-12">
               <h2 className="text-2xl font-semibold mb-4">1. Acceptance of Terms</h2>
               <p className="text-muted-foreground mb-4">
-                By accessing and using LinkGen's services, you agree to be bound by these Terms of Service and all applicable laws and regulations.
+                By accessing and using LinkGenn's services, you agree to be bound by these Terms of Service and all applicable laws and regulations.
               </p>
             </section>
             
             <section className="mb-12">
               <h2 className="text-2xl font-semibold mb-4">2. Description of Service</h2>
               <p className="text-muted-foreground mb-4">
-                LinkGen provides an AI-powered platform for generating and managing LinkedIn content. We reserve the right to modify, suspend, or discontinue any aspect of our services at any time.
+                LinkGenn provides an AI-powered platform for generating and managing LinkedIn content. We reserve the right to modify, suspend, or discontinue any aspect of our services at any time.
               </p>
             </section>
             
@@ -46,7 +46,7 @@ const TermsOfService = () => {
             <section className="mb-12">
               <h2 className="text-2xl font-semibold mb-4">5. Intellectual Property</h2>
               <p className="text-muted-foreground mb-4">
-                The LinkGen platform, including its original content and features, is owned by LinkGen and protected by international copyright, trademark, and other intellectual property laws.
+                The LinkGenn platform, including its original content and features, is owned by LinkGenn and protected by international copyright, trademark, and other intellectual property laws.
               </p>
             </section>
           </div>

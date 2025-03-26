@@ -12,7 +12,7 @@ const AboutUs = () => {
           
           <div className="prose prose-lg dark:prose-invert">
             <p className="text-lg text-muted-foreground mb-6">
-              LinkGen is a cutting-edge AI-powered platform designed to help professionals and businesses create engaging LinkedIn content that resonates with their audience.
+              LinkGenn is a cutting-edge AI-powered platform designed to help professionals and businesses create engaging LinkedIn content that resonates with their audience.
             </p>
             
             <h2 className="text-2xl font-semibold mt-12 mb-4">Our Mission</h2>
@@ -22,7 +22,7 @@ const AboutUs = () => {
             
             <h2 className="text-2xl font-semibold mt-12 mb-4">Our Story</h2>
             <p className="text-muted-foreground mb-6">
-              Founded by a team of AI enthusiasts and social media experts, LinkGen was born from the recognition that professionals need better tools to maintain an active and engaging presence on LinkedIn.
+              Founded by a team of AI enthusiasts and social media experts, LinkGenn was born from the recognition that professionals need better tools to maintain an active and engaging presence on LinkedIn.
             </p>
             
             <h2 className="text-2xl font-semibold mt-12 mb-4">Our Values</h2>

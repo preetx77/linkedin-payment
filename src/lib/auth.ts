@@ -8,7 +8,7 @@ export async function signUpWithEmail(email: string, password: string, full_name
       data: {
         full_name,
       },
-      emailRedirectTo: `${window.location.origin}/auth/callback`,
+      emailRedirectTo: `${import.meta.env.VITE_SITE_URL || window.location.origin}/auth/callback`,
     },
   });
   
@@ -40,7 +40,7 @@ export async function signInWithGoogle() {
         access_type: 'offline',
         prompt: 'consent',
       },
-      redirectTo: `${window.location.origin}/auth/callback`
+      redirectTo: `${import.meta.env.VITE_SITE_URL || window.location.origin}/auth/callback`
     }
   });
 
@@ -74,7 +74,7 @@ export async function resendVerificationEmail(email: string) {
     type: 'signup',
     email: email,
     options: {
-      emailRedirectTo: `${window.location.origin}/auth/callback`,
+      emailRedirectTo: `${import.meta.env.VITE_SITE_URL || window.location.origin}/auth/callback`,
     },
   });
   

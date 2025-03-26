@@ -1,8 +1,8 @@
-# LinkGen ✨ - AI-Powered LinkedIn Content Generator
+# LinkGenn ✨ - AI-Powered LinkedIn Content Generator
 
 <div align="center">
 
-![LinkGen Logo](public/logo.svg)
+![LinkGenn Logo](public/logo.svg)
 
 🚀 Transform your LinkedIn presence with AI-powered content generation
 
@@ -125,5 +125,5 @@ Need help? Contact us at snaxchit@gmail.com
 ---
 
 <div align="center">
-Made with ❤️ by LinkGen Team
+Made with ❤️ by LinkGenn Team
 </div>

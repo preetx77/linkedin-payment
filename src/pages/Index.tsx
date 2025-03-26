@@ -13,63 +13,63 @@ const Index = () => {
     {
       name: "James Chen",
       image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
-      text: "Been really enjoying LinkGen - especially the ideation tool & how it converts YouTube content into written text. So easy to use as well.",
+      text: "Been really enjoying LinkGenn - especially the ideation tool & how it converts YouTube content into written text. So easy to use as well.",
       rating: 5,
       role: "Content Creator"
     },
     {
       name: "Marcus Wright",
       image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&h=400&fit=crop",
-      text: "Benefits of Using LinkGen:\n• Find unlimited post ideas\n• Saves you time and effort\n• Generate engaging content\n• Grow your LinkedIn presence",
+      text: "Benefits of Using LinkGenn:\n• Find unlimited post ideas\n• Saves you time and effort\n• Generate engaging content\n• Grow your LinkedIn presence",
       rating: 5,
       role: "Marketing Expert"
     },
     {
       name: "Adrian Torres",
       image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop",
-      text: "Writing content can be a stressful experience. When I first started writing online 2 years ago, I'd sit on my phone for AGES thinking of what to write on the spot. Back then, AI wasn't readily available so I didn't have LinkGen. If I was starting again now, LinkGen would've saved me A LOT of stress and time.",
+      text: "I started my LinkedIn journey in 2019 when AI tools weren't readily available so I didn't have LinkGenn. If I was starting again now, LinkGenn would've saved me A LOT of stress and time.",
       rating: 5,
       role: "Digital Entrepreneur"
     },
     {
       name: "Thomas Blake",
       image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop",
-      text: "Copy-paste Chat GPT content won't help you build a solid brand people follow. Using tools like LinkGen makes AI-generated content much easier to use and tailor to your way of writing. Saving you time and making sure your content is of value.",
+      text: "Copy-paste Chat GPT content won't help you build a solid brand people follow. Using tools like LinkGenn makes AI-generated content much easier to use and tailor to your way of writing. Saving you time and making sure your content is of value.",
       rating: 5,
       role: "Brand Strategist"
     },
     {
       name: "Daniel Martinez",
       image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&fit=crop",
-      text: "ChatGPT is king. But LinkGen is Easier. LinkGen creates elite AI posts very fast.",
+      text: "ChatGPT is king. But LinkGenn is Easier. LinkGenn creates elite AI posts very fast.",
       rating: 5,
       role: "Tech Influencer"
     },
     {
       name: "Michael Carter",
       image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop",
-      text: "The quality of content LinkGen generates is incredible. It understands context and tone perfectly, making each post feel authentic and engaging.",
+      text: "The quality of content LinkGenn generates is incredible. It understands context and tone perfectly, making each post feel authentic and engaging.",
       rating: 5,
       role: "Social Media Manager"
     },
     {
       name: "Ryan Anderson",
       image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop",
-      text: "What impresses me most is how LinkGen maintains my brand voice while optimizing for engagement. Game-changing tool for busy professionals.",
+      text: "What impresses me most is how LinkGenn maintains my brand voice while optimizing for engagement. Game-changing tool for busy professionals.",
       rating: 5,
       role: "Business Coach"
     },
     {
       name: "Chris Walker",
       image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop",
-      text: "From ideation to execution, LinkGen streamlines my entire content creation process. My engagement has doubled since I started using it.",
+      text: "From ideation to execution, LinkGenn streamlines my entire content creation process. My engagement has doubled since I started using it.",
       rating: 5,
       role: "LinkedIn Creator"
     },
     {
       name: "Alex Bennett",
       image: "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?w=400&h=400&fit=crop",
-      text: "The AI understands LinkedIn's ecosystem perfectly. Since using LinkGen, my posts have been getting featured in newsletters and my network growth is exponential. Absolutely worth every penny!",
+      text: "The AI understands LinkedIn's ecosystem perfectly. Since using LinkGenn, my posts have been getting featured in newsletters and my network growth is exponential. Absolutely worth every penny!",
       rating: 5,
       role: "Growth Advisor"
     }
@@ -103,7 +103,7 @@ const Index = () => {
                 Transform Your LinkedIn Game
               </h2>
               <p className="text-xl text-muted-foreground leading-relaxed">
-                Join thousands of professionals who are using LinkGen to build powerful personal brands and attract life-changing opportunities
+                Join thousands of professionals who are using LinkGenn to build powerful personal brands and attract life-changing opportunities
               </p>
             </div>
             
@@ -135,7 +135,7 @@ const Index = () => {
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-900/20 via-gray-950/0 to-gray-950/0"></div>
           <div className="container mx-auto px-4 relative">
             <h2 className="text-4xl md:text-5xl font-bold text-center mb-4 text-white">
-              What they say about LinkGen
+              What they say about LinkGenn
               </h2>
             <p className="text-xl text-gray-400 text-center mb-16 max-w-2xl mx-auto">
               Join thousands of professionals who are already transforming their LinkedIn presence
@@ -197,7 +197,7 @@ const Index = () => {
                 Ready to Stand Out?
               </h2>
               <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
-                Join forward-thinking professionals who are using LinkGen to create content that attracts opportunities, builds influence, and accelerates career growth.
+                Join forward-thinking professionals who are using LinkGenn to create content that attracts opportunities, builds influence, and accelerates career growth.
               </p>
               
               {!user && (
