@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background with gradient -->
+  <rect width="1200" height="630" fill="url(#bg-gradient)"/>
+  
+  <!-- Logo -->
+  <g transform="translate(100, 215)">
+    <rect width="80" height="80" rx="16" fill="black"/>
+    <path d="M18 12V62H62V46H34V12H18Z" fill="url(#logo-gradient)"/>
+  </g>
+  
+  <!-- Text -->
+  <text x="200" y="260" fill="white" font-family="system-ui, -apple-system, sans-serif" font-size="64" font-weight="bold">
+    LinkGenn
+  </text>
+  <text x="200" y="320" fill="#94A3B8" font-family="system-ui, -apple-system, sans-serif" font-size="32">
+    AI-Powered LinkedIn Content Generator
+  </text>
+  
+  <!-- Gradients -->
+  <defs>
+    <linearGradient id="bg-gradient" x1="0" y1="0" x2="1200" y2="630">
+      <stop offset="0%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#1E293B"/>
+    </linearGradient>
+    <linearGradient id="logo-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#60A5FA"/>
+    </linearGradient>
+  </defs>
+</svg> 
